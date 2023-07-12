@@ -2,7 +2,7 @@
   "name": "async-race",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "start-server-a": "webpack serve",
     "build-dev-a": "webpack",
