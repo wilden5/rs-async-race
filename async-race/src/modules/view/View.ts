@@ -28,7 +28,7 @@ class View {
         this.GARAGE_PAGE = DOMHelpers.createElement('div', ['garage__page'], 'Page #1');
     }
 
-    private appendElements(): void {
+    public appendElements(): void {
         DOMHelpers.appendChildToElement(document.body, this.WRAPPER);
         DOMHelpers.appendChildToElement(this.WRAPPER, this.NAVIGATION_CONTAINER);
         DOMHelpers.appendChildToElement(this.NAVIGATION_CONTAINER, this.GARAGE_BUTTON);
@@ -39,8 +39,8 @@ class View {
         DOMHelpers.appendChildToElement(this.GARAGE_CONTAINER, this.GARAGE_PAGE);
     }
 
-    public init(): void {
-        this.appendElements();
+    public updateGarageTitle(numberOfCars: number): void {
+        this.GARAGE_TITLE.innerText = `Garage (${numberOfCars})`;
     }
 }
 

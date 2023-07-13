@@ -1,14 +1,23 @@
-import DOMHelpers from '../utils/DOMHelpers';
-import { getNumberOfCarsInGarage } from '../utils/APIHelpers';
+import View from '../view/View';
+import Model from '../model/Model';
 
 class Controller {
-    private async setGarageTitle(): Promise<void> {
-        const GARAGE_TITLE = DOMHelpers.getElement('.garage__title');
-        GARAGE_TITLE.innerText += ` (${await getNumberOfCarsInGarage()})`;
+    private MODEL: Model;
+
+    private readonly VIEW: View;
+
+    constructor(model: Model, view: View) {
+        this.MODEL = model;
+        this.VIEW = view;
+    }
+
+    public getView(): View {
+        return this.VIEW;
     }
 
     public async init(): Promise<void> {
-        await this.setGarageTitle();
+        await this.MODEL.setNumberOfCars();
+        this.VIEW.updateGarageTitle(this.MODEL.getNumberOfCars());
     }
 }
 
