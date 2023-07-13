@@ -11,13 +11,10 @@ class Controller {
         this.VIEW = view;
     }
 
-    public getView(): View {
-        return this.VIEW;
-    }
-
     public async init(): Promise<void> {
-        await this.MODEL.setNumberOfCars();
-        this.VIEW.updateGarageTitle(this.MODEL.getNumberOfCars());
+        this.VIEW.setupDOMElementsAndEventHandlers();
+        await this.MODEL.init();
+        this.VIEW.updateViewTitles(this.MODEL.getNumberOfCars(), this.MODEL.getNumberOfWinners());
     }
 }
 

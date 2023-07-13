@@ -10,7 +10,6 @@ class App {
     }
 
     public async start(): Promise<void> {
-        this.APP_CONTROLLER.getView().appendElements();
         await this.APP_CONTROLLER.init();
     }
 }

@@ -2,15 +2,27 @@
   margin-bottom: 3rem;
 }
 
-.winners-container {
-  display: none;
+.garage-container {
+
+  &.disabled {
+    display: none;
+  }
 }
 
-.garage__title {
+.winners-container {
+
+  &.disabled {
+    display: none;
+  }
+}
+
+.garage__title,
+.winners__title {
   margin-bottom: 2rem;
   font-size: 4rem;
 }
 
-.garage__page {
+.garage__page,
+.winners__page {
   font-size: 2rem;
 }
