@@ -1,11 +1,11 @@
-import CommonView from '../view/CommonView';
-import GarageView from '../view/GarageView';
-import GarageModel from '../model/GarageModel';
-import GarageController from '../controller/GarageController';
-import WinnersView from '../view/WinnersView';
-import WinnersModel from '../model/WinnersModel';
-import WinnersController from '../controller/WinnersController';
-import CommonController from '../controller/CommonController';
+import CommonView from '../common/CommonView';
+import GarageView from '../garage/GarageView';
+import GarageModel from '../garage/GarageModel';
+import GarageController from '../garage/GarageController';
+import WinnersView from '../winners/WinnersView';
+import WinnersModel from '../winners/WinnersModel';
+import WinnersController from '../winners/WinnersController';
+import CommonController from '../common/CommonController';
 
 class App {
     private COMMON_CONTROLLER: CommonController;

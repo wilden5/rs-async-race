@@ -1,4 +1,4 @@
-import CommonView from '../view/CommonView';
+import CommonView from './CommonView';
 
 class CommonController {
     private readonly COMMON_VIEW: CommonView;

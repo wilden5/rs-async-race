@@ -1,5 +1,5 @@
-import GarageModel from '../model/GarageModel';
-import GarageView from '../view/GarageView';
+import GarageModel from './GarageModel';
+import GarageView from './GarageView';
 
 class GarageController {
     private GARAGE_MODEL: GarageModel;

@@ -1,4 +1,4 @@
-import DOMHelpers from '../utils/DOMHelpers';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class CommonView {
     public WRAPPER: HTMLElement;

@@ -1,5 +1,5 @@
-import WinnersModel from '../model/WinnersModel';
-import WinnersView from '../view/WinnersView';
+import WinnersModel from './WinnersModel';
+import WinnersView from './WinnersView';
 
 class WinnersController {
     private WINNERS_MODEL: WinnersModel;

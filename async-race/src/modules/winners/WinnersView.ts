@@ -1,5 +1,5 @@
-import DOMHelpers from '../utils/DOMHelpers';
-import CommonView from './CommonView';
+import DOMHelpers from '../../utils/DOMHelpers';
+import CommonView from '../common/CommonView';
 
 class WinnersView {
     private COMMON_VIEW: CommonView;
