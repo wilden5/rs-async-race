@@ -16,6 +16,8 @@ class GarageView {
 
     public CREATE_CAR_BUTTON: HTMLElement;
 
+    public onCreateCarButtonClick: (name: string, color: string) => void = () => {};
+
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
         this.GARAGE_TITLE = DOMHelpers.createElement('div', ['garage__title'], 'Garage');
@@ -37,6 +39,7 @@ class GarageView {
 
     private setUpInputElements(): void {
         this.CREATE_CAR_INPUT.setAttribute('type', 'text');
+        this.CREATE_CAR_INPUT.setAttribute('placeholder', 'Enter car name here');
         this.SET_CAR_COLOR.setAttribute('type', 'color');
     }
 
@@ -44,9 +47,18 @@ class GarageView {
         this.GARAGE_TITLE.innerText = `Garage (${numberOfCars})`;
     }
 
+    private handleCreateCarButtonClick = (): void => {
+        const name = (this.CREATE_CAR_INPUT as HTMLInputElement).value;
+        const color = (this.SET_CAR_COLOR as HTMLInputElement).value;
+        if (name && color) {
+            this.onCreateCarButtonClick(name, color);
+        }
+    };
+
     public setupDOMElementsAndEventHandlers(): void {
         this.appendElements();
         this.setUpInputElements();
+        this.CREATE_CAR_BUTTON.addEventListener('click', this.handleCreateCarButtonClick);
     }
 }
 
