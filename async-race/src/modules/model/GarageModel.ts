@@ -1,4 +1,4 @@
-import { fetchNumberOfCarsInGarage } from '../utils/APIHelpers';
+import Constants from '../utils/Constants';
 
 class GarageModel {
     private numberOfCars: number;
@@ -8,11 +8,37 @@ class GarageModel {
     }
 
     public async setNumberOfCars(): Promise<void> {
-        this.numberOfCars = await fetchNumberOfCarsInGarage();
+        const response = await fetch(Constants.GARAGE_URL);
+        const data: number[] = await response.json();
+        this.numberOfCars = data.length;
     }
 
     public getNumberOfCars(): number {
         return this.numberOfCars;
+    }
+
+    public async saveCarToDatabase(name: string, color: string): Promise<void> {
+        const data = {
+            name,
+            color,
+        };
+        try {
+            const response = await fetch(Constants.GARAGE_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                console.log('New car created successfully');
+            } else {
+                console.log('Failed to create a new car');
+            }
+        } catch (error) {
+            console.log('Error:', error);
+        }
     }
 
     public async init(): Promise<void> {

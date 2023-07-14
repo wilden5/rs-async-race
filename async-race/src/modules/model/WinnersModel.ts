@@ -1,4 +1,4 @@
-import { fetchNumberOfWinners } from '../utils/APIHelpers';
+import Constants from '../utils/Constants';
 
 class WinnersModel {
     private numberOfWinners: number;
@@ -8,7 +8,9 @@ class WinnersModel {
     }
 
     public async setNumberOfWinners(): Promise<void> {
-        this.numberOfWinners = await fetchNumberOfWinners();
+        const response = await fetch(Constants.WINNERS_URL);
+        const data: number[] = await response.json();
+        this.numberOfWinners = data.length;
     }
 
     public getNumberOfWinners(): number {

@@ -5,7 +5,7 @@
     "target": "es6",
 
     /* Modules */
-    "module": "es6",
+    "module": "commonjs",
 
     /* JavaScript Support */
     "esModuleInterop": true,
