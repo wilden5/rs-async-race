@@ -1,4 +1,5 @@
 import Constants from '../../utils/Constants';
+import { CarEntity } from '../../types/Interfaces';
 
 class GarageModel {
     private numberOfCars: number;
@@ -7,7 +8,7 @@ class GarageModel {
         this.numberOfCars = 0;
     }
 
-    public async setNumberOfCars(): Promise<void> {
+    public async syncNumberOfCars(): Promise<void> {
         const response = await fetch(Constants.GARAGE_URL);
         const data: number[] = await response.json();
         this.numberOfCars = data.length;
@@ -41,8 +42,13 @@ class GarageModel {
         }
     }
 
+    public async fetchCars(): Promise<CarEntity[]> {
+        const response = await fetch(Constants.GARAGE_URL);
+        return response.json();
+    }
+
     public async init(): Promise<void> {
-        await this.setNumberOfCars();
+        await this.syncNumberOfCars();
     }
 }
 

@@ -1,5 +1,6 @@
 import DOMHelpers from '../../utils/DOMHelpers';
 import CommonView from '../common/CommonView';
+import { CarEntity } from '../../types/Interfaces';
 
 class GarageView {
     private COMMON_VIEW: CommonView;
@@ -24,6 +25,8 @@ class GarageView {
 
     public UPDATE_CAR_BUTTON: HTMLElement;
 
+    public CARS_CONTAINER: HTMLElement;
+
     public onCreateCarButtonClick: (name: string, color: string) => void = () => {};
 
     constructor(commonView: CommonView) {
@@ -38,11 +41,13 @@ class GarageView {
         this.UPDATE_CAR_INPUT = DOMHelpers.createElement('input', ['update-car']);
         this.UPDATE_CAR_COLOR = DOMHelpers.createElement('input', ['update-color']);
         this.UPDATE_CAR_BUTTON = DOMHelpers.createElement('button', ['update-button', 'button'], 'Update car');
+        this.CARS_CONTAINER = DOMHelpers.createElement('div', ['cars-container']);
     }
 
     private appendElements(): void {
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.GARAGE_TITLE);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.GARAGE_PAGE);
+        DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.CARS_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.CREATE_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.UPDATE_CONTAINER);
         DOMHelpers.appendChildToElement(this.CREATE_CONTAINER, this.CREATE_CAR_INPUT);
@@ -78,6 +83,21 @@ class GarageView {
             this.onCreateCarButtonClick(name, color);
         }
     };
+
+    public renderCars(cars: CarEntity[]): void {
+        this.CARS_CONTAINER.innerHTML = '';
+        cars.forEach((car) => {
+            const carDiv = DOMHelpers.createElement('div', [`id-${car.id}`]);
+            const carName = DOMHelpers.createElement(
+                'span',
+                [car.name.replace(/\s/g, '-').trim().toLowerCase()],
+                `${car.name}`
+            );
+
+            DOMHelpers.appendChildToElement(carDiv, carName);
+            DOMHelpers.appendChildToElement(this.CARS_CONTAINER, carDiv);
+        });
+    }
 
     public setupDOMElementsAndEventHandlers(): void {
         this.appendElements();
