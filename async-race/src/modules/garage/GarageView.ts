@@ -28,9 +28,15 @@ class GarageView {
 
     public CARS_CONTAINER: HTMLElement;
 
+    public ID_HOLDER: HTMLElement;
+
     public onCreateCarButtonClick: (name: string, color: string) => void = () => {};
 
     public onDeleteButtonClick: (id: number) => void = () => {};
+
+    public onUpdateButtonClick: (name: string, color: string, id: number) => void = () => {};
+
+    public onExistingCarData: (id: number) => Promise<CarEntity> = () => Promise.resolve({} as CarEntity);
 
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
@@ -45,6 +51,7 @@ class GarageView {
         this.UPDATE_CAR_COLOR = DOMHelpers.createElement('input', ['update-color']);
         this.UPDATE_CAR_BUTTON = DOMHelpers.createElement('button', ['update-button', 'button'], 'Update car');
         this.CARS_CONTAINER = DOMHelpers.createElement('div', ['cars-container']);
+        this.ID_HOLDER = DOMHelpers.createElement('span', ['id-holder']);
     }
 
     private appendElements(): void {
@@ -53,6 +60,7 @@ class GarageView {
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.CARS_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.CREATE_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.UPDATE_CONTAINER);
+        DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.ID_HOLDER);
         DOMHelpers.appendChildToElement(this.CREATE_CONTAINER, this.CREATE_CAR_INPUT);
         DOMHelpers.appendChildToElement(this.CREATE_CONTAINER, this.SET_CAR_COLOR);
         DOMHelpers.appendChildToElement(this.CREATE_CONTAINER, this.CREATE_CAR_BUTTON);
@@ -69,10 +77,24 @@ class GarageView {
         this.UPDATE_CAR_INPUT.setAttribute('type', 'text');
         this.UPDATE_CAR_INPUT.setAttribute('placeholder', 'Update existing car name');
         this.UPDATE_CAR_COLOR.setAttribute('type', 'color');
+        this.setInputStatus('lock');
+    }
 
-        (this.UPDATE_CAR_INPUT as HTMLInputElement).disabled = true;
-        (this.UPDATE_CAR_COLOR as HTMLInputElement).disabled = true;
-        (this.UPDATE_CAR_BUTTON as HTMLButtonElement).disabled = true;
+    private setInputStatus(status: string): void {
+        const array: HTMLElement[] = [this.UPDATE_CAR_INPUT, this.UPDATE_CAR_COLOR, this.UPDATE_CAR_BUTTON];
+        if (status === 'lock') {
+            array.forEach((item) => {
+                const inputElement: HTMLInputElement = item as HTMLInputElement;
+                inputElement.disabled = true;
+            });
+        }
+
+        if (status === 'unlock') {
+            array.forEach((item) => {
+                const inputElement: HTMLInputElement = item as HTMLInputElement;
+                inputElement.disabled = false;
+            });
+        }
     }
 
     public updateGarageTitle(numberOfCars: number): void {
@@ -87,12 +109,31 @@ class GarageView {
         }
     };
 
-    private handleRemoveCarButtonClick = (event: Event): void => {
+    private handleUpdateCarButtonClick = (): void => {
+        const name = (this.UPDATE_CAR_INPUT as HTMLInputElement).value;
+        const color = (this.UPDATE_CAR_COLOR as HTMLInputElement).value;
+        const id = this.ID_HOLDER.innerText;
+        if (name && color) {
+            this.onUpdateButtonClick(name, color, Number(id));
+            this.setInputStatus('lock');
+        }
+    };
+
+    private handleSpecificCarButtons = (event: Event): void => {
         const { target } = event;
         const id = (target as HTMLElement).classList[0].split('-')[1];
 
-        if (id) {
+        if ((target as HTMLElement).innerText.toLowerCase().includes('remove')) {
             this.onDeleteButtonClick(Number(id));
+        }
+
+        if ((target as HTMLElement).innerText.toLowerCase().includes('select')) {
+            this.onExistingCarData(Number(id)).then((abc) => {
+                (this.UPDATE_CAR_INPUT as HTMLInputElement).value = abc.name;
+                (this.UPDATE_CAR_COLOR as HTMLInputElement).value = abc.color;
+                this.ID_HOLDER.innerText = abc.id.toString();
+            });
+            this.setInputStatus('unlock');
         }
     };
 
@@ -100,11 +141,7 @@ class GarageView {
         this.CARS_CONTAINER.innerHTML = '';
         cars.forEach((car) => {
             const carDiv = DOMHelpers.createElement('div', [`id-${car.id}`, 'car-wrapper']);
-            const carName = DOMHelpers.createElement(
-                'span',
-                [car.name.replace(/\s/g, '-').trim().toLowerCase(), 'car-name'],
-                `${car.name}`
-            );
+            const carName = DOMHelpers.createElement('span', [`name-${car.id}`, 'car-name'], `${car.name}`);
             const carSvg = DOMHelpers.createElement('div', [`svg-${car.id}`, 'car-image']);
             const selectCarButton = DOMHelpers.createElement('button', [`select-${car.id}`, 'button'], 'Select Car');
             const removeCarButton = DOMHelpers.createElement('button', [`remove-${car.id}`, 'button'], 'Remove Car');
@@ -124,7 +161,8 @@ class GarageView {
         this.appendElements();
         this.setUpInputElements();
         this.CREATE_CAR_BUTTON.addEventListener('click', this.handleCreateCarButtonClick);
-        this.CARS_CONTAINER.addEventListener('click', this.handleRemoveCarButtonClick);
+        this.CARS_CONTAINER.addEventListener('click', this.handleSpecificCarButtons);
+        this.UPDATE_CAR_BUTTON.addEventListener('click', this.handleUpdateCarButtonClick);
     }
 }
 

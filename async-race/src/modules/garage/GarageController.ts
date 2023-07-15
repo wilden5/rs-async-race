@@ -1,5 +1,6 @@
 import GarageModel from './GarageModel';
 import GarageView from './GarageView';
+import { CarEntity } from '../../types/Interfaces';
 
 class GarageController {
     private GARAGE_MODEL: GarageModel;
@@ -11,6 +12,9 @@ class GarageController {
         this.GARAGE_VIEW = view;
         this.GARAGE_VIEW.onCreateCarButtonClick = this.handleNewCarAddition;
         this.GARAGE_VIEW.onDeleteButtonClick = this.handleCarDeletion;
+        this.GARAGE_VIEW.onUpdateButtonClick = this.handleCarUpdating;
+
+        this.GARAGE_VIEW.onExistingCarData = this.handleGetExistingCar;
     }
 
     private handleNewCarAddition = async (name: string, color: string): Promise<void> => {
@@ -25,6 +29,15 @@ class GarageController {
         await this.GARAGE_MODEL.syncNumberOfCars();
         await this.handleRenderCars();
         this.GARAGE_VIEW.updateGarageTitle(this.GARAGE_MODEL.getNumberOfCars());
+    };
+
+    private handleCarUpdating = async (name: string, color: string, id: number): Promise<void> => {
+        await this.GARAGE_MODEL.updateCarInDatabase(name, color, id);
+        await this.handleRenderCars();
+    };
+
+    private handleGetExistingCar = async (id: number): Promise<CarEntity> => {
+        return this.GARAGE_MODEL.fetchSpecificCarData(id);
     };
 
     public async handleRenderCars(): Promise<void> {
