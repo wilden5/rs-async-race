@@ -10,10 +10,18 @@ class GarageController {
         this.GARAGE_MODEL = model;
         this.GARAGE_VIEW = view;
         this.GARAGE_VIEW.onCreateCarButtonClick = this.handleNewCarAddition;
+        this.GARAGE_VIEW.onDeleteButtonClick = this.handleCarDeletion;
     }
 
     private handleNewCarAddition = async (name: string, color: string): Promise<void> => {
         await this.GARAGE_MODEL.saveCarToDatabase(name, color);
+        await this.GARAGE_MODEL.syncNumberOfCars();
+        await this.handleRenderCars();
+        this.GARAGE_VIEW.updateGarageTitle(this.GARAGE_MODEL.getNumberOfCars());
+    };
+
+    private handleCarDeletion = async (id: number): Promise<void> => {
+        await this.GARAGE_MODEL.deleteCarFromDatabase(id);
         await this.GARAGE_MODEL.syncNumberOfCars();
         await this.handleRenderCars();
         this.GARAGE_VIEW.updateGarageTitle(this.GARAGE_MODEL.getNumberOfCars());

@@ -47,6 +47,21 @@ class GarageModel {
         return response.json();
     }
 
+    public async deleteCarFromDatabase(id: number): Promise<void> {
+        try {
+            const response = await fetch(`${Constants.GARAGE_URL}/${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                console.log('Car was deleted successfully');
+            } else {
+                console.log('Failed to delete car');
+            }
+        } catch (error) {
+            console.log('Error:', error);
+        }
+    }
+
     public async init(): Promise<void> {
         await this.syncNumberOfCars();
     }

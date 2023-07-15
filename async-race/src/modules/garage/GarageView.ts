@@ -30,6 +30,8 @@ class GarageView {
 
     public onCreateCarButtonClick: (name: string, color: string) => void = () => {};
 
+    public onDeleteButtonClick: (id: number) => void = () => {};
+
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
         this.GARAGE_TITLE = DOMHelpers.createElement('div', ['garage__title'], 'Garage');
@@ -85,6 +87,15 @@ class GarageView {
         }
     };
 
+    private handleRemoveCarButtonClick = (event: Event): void => {
+        const { target } = event;
+        const id = (target as HTMLElement).classList[0].split('-')[1];
+
+        if (id) {
+            this.onDeleteButtonClick(Number(id));
+        }
+    };
+
     public renderCars(cars: CarEntity[]): void {
         this.CARS_CONTAINER.innerHTML = '';
         cars.forEach((car) => {
@@ -113,6 +124,7 @@ class GarageView {
         this.appendElements();
         this.setUpInputElements();
         this.CREATE_CAR_BUTTON.addEventListener('click', this.handleCreateCarButtonClick);
+        this.CARS_CONTAINER.addEventListener('click', this.handleRemoveCarButtonClick);
     }
 }
 
