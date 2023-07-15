@@ -108,7 +108,7 @@ class GarageView {
         if (name && color) {
             this.onCreateCarButtonClick(name, color);
             (this.CREATE_CAR_INPUT as HTMLInputElement).value = '';
-            (this.SET_CAR_COLOR as HTMLInputElement).value = '';
+            (this.SET_CAR_COLOR as HTMLInputElement).value = Constants.DEFAULT_COLOR_PICKER;
         }
     };
 
@@ -120,7 +120,7 @@ class GarageView {
             this.onUpdateButtonClick(name, color, Number(id));
             this.setInputElementsStatus(Constants.LOCK_INPUT_FIELDS);
             (this.UPDATE_CAR_INPUT as HTMLInputElement).value = '';
-            (this.UPDATE_CAR_COLOR as HTMLInputElement).value = '';
+            (this.UPDATE_CAR_COLOR as HTMLInputElement).value = Constants.DEFAULT_COLOR_PICKER;
         }
     };
 
@@ -133,10 +133,10 @@ class GarageView {
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.SELECT_BUTTON_IDENTIFIER)) {
-            this.onReceiveExistingCarData(Number(id)).then((abc) => {
-                (this.UPDATE_CAR_INPUT as HTMLInputElement).value = abc.name;
-                (this.UPDATE_CAR_COLOR as HTMLInputElement).value = abc.color;
-                this.ID_HOLDER.innerText = abc.id.toString();
+            this.onReceiveExistingCarData(Number(id)).then((specificCar) => {
+                (this.UPDATE_CAR_INPUT as HTMLInputElement).value = specificCar.name;
+                (this.UPDATE_CAR_COLOR as HTMLInputElement).value = specificCar.color;
+                this.ID_HOLDER.innerText = specificCar.id.toString();
             });
             this.setInputElementsStatus(Constants.UNLOCK_INPUT_FIELDS);
         }

@@ -23,22 +23,18 @@ class GarageModel {
             name,
             color,
         };
-        try {
-            const response = await fetch(Constants.GARAGE_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+        const response = await fetch(Constants.GARAGE_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
 
-            if (response.ok) {
-                console.log('New car created successfully');
-            } else {
-                console.log('Failed to create a new car');
-            }
-        } catch (error) {
-            console.log('Error:', error);
+        if (response.ok) {
+            console.log(Constants.CREATE_NEW_CAR_SUCCESS_MESSAGE);
+        } else {
+            console.log(Constants.CREATE_NEW_CAR_FAIL_MESSAGE);
         }
     }
 
@@ -48,18 +44,14 @@ class GarageModel {
     }
 
     public async deleteCarInDB(id: number): Promise<void> {
-        try {
-            const response = await fetch(`${Constants.GARAGE_URL}/${id}`, {
-                method: 'DELETE',
-            });
+        const response = await fetch(`${Constants.GARAGE_URL}/${id}`, {
+            method: 'DELETE',
+        });
 
-            if (response.ok) {
-                console.log('Car was deleted successfully');
-            } else {
-                console.log('Failed to delete car');
-            }
-        } catch (error) {
-            console.log('Error:', error);
+        if (response.ok) {
+            console.log(Constants.DELETE_CAR_SUCCESS_MESSAGE);
+        } else {
+            console.log(Constants.DELETE_CAR_FAIL_MESSAGE);
         }
     }
 
@@ -69,40 +61,31 @@ class GarageModel {
             color,
             id,
         };
-        try {
-            const response = await fetch(`${Constants.GARAGE_URL}/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+        const response = await fetch(`${Constants.GARAGE_URL}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
 
-            if (response.ok) {
-                console.log('Car was updated successfully');
-            } else {
-                console.log('Failed to update car');
-            }
-        } catch (error) {
-            console.log('Error:', error);
+        if (response.ok) {
+            console.log(Constants.UPDATE_CAR_SUCCESS_MESSAGE);
+        } else {
+            console.log(Constants.UPDATE_CAR_FAIL_MESSAGE);
         }
     }
 
     public async fetchSpecificCarDataFromDB(id: number): Promise<CarEntity> {
-        try {
-            const response = await fetch(`${Constants.GARAGE_URL}/${id}`);
+        const response = await fetch(`${Constants.GARAGE_URL}/${id}`);
 
-            if (response.ok) {
-                console.log('Car was received successfully');
-                const data = response.json();
-                return await data;
-            }
-            console.log('Failed to receive car');
-            return {} as CarEntity;
-        } catch (error) {
-            console.log('Error:', error);
-            return {} as CarEntity;
+        if (response.ok) {
+            console.log(Constants.FETCH_SPECIFIC_CAR_SUCCESS_MESSAGE);
+            return response.json();
         }
+
+        console.log(Constants.FETCH_SPECIFIC_CAR_FAIL_MESSAGE);
+        return {} as CarEntity;
     }
 
     public async init(): Promise<void> {
