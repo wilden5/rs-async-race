@@ -10,45 +10,46 @@ class GarageController {
     constructor(model: GarageModel, view: GarageView) {
         this.GARAGE_MODEL = model;
         this.GARAGE_VIEW = view;
-        this.GARAGE_VIEW.onCreateCarButtonClick = this.handleNewCarAddition;
-        this.GARAGE_VIEW.onDeleteButtonClick = this.handleCarDeletion;
-        this.GARAGE_VIEW.onUpdateButtonClick = this.handleCarUpdating;
 
-        this.GARAGE_VIEW.onExistingCarData = this.handleGetExistingCar;
+        // below functions act as references
+        this.GARAGE_VIEW.onCreateCarButtonClick = this.handleAddNewCar;
+        this.GARAGE_VIEW.onDeleteButtonClick = this.handleDeleteExistingCar;
+        this.GARAGE_VIEW.onUpdateButtonClick = this.handleUpdateExistingCar;
+        this.GARAGE_VIEW.onReceiveExistingCarData = this.handleGetSpecificCarData;
     }
 
-    private handleNewCarAddition = async (name: string, color: string): Promise<void> => {
-        await this.GARAGE_MODEL.saveCarToDatabase(name, color);
-        await this.GARAGE_MODEL.syncNumberOfCars();
-        await this.handleRenderCars();
-        this.GARAGE_VIEW.updateGarageTitle(this.GARAGE_MODEL.getNumberOfCars());
+    private handleAddNewCar = async (name: string, color: string): Promise<void> => {
+        await this.GARAGE_MODEL.saveNewCarInDB(name, color);
+        await this.GARAGE_MODEL.fetchNumberOfCarsFromDB();
+        await this.handleRenderCarsInGarage();
+        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberOfCarsInGarage());
     };
 
-    private handleCarDeletion = async (id: number): Promise<void> => {
-        await this.GARAGE_MODEL.deleteCarFromDatabase(id);
-        await this.GARAGE_MODEL.syncNumberOfCars();
-        await this.handleRenderCars();
-        this.GARAGE_VIEW.updateGarageTitle(this.GARAGE_MODEL.getNumberOfCars());
+    private handleDeleteExistingCar = async (id: number): Promise<void> => {
+        await this.GARAGE_MODEL.deleteCarInDB(id);
+        await this.GARAGE_MODEL.fetchNumberOfCarsFromDB();
+        await this.handleRenderCarsInGarage();
+        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberOfCarsInGarage());
     };
 
-    private handleCarUpdating = async (name: string, color: string, id: number): Promise<void> => {
-        await this.GARAGE_MODEL.updateCarInDatabase(name, color, id);
-        await this.handleRenderCars();
+    private handleUpdateExistingCar = async (name: string, color: string, id: number): Promise<void> => {
+        await this.GARAGE_MODEL.updateCarInDB(name, color, id);
+        await this.handleRenderCarsInGarage();
     };
 
-    private handleGetExistingCar = async (id: number): Promise<CarEntity> => {
-        return this.GARAGE_MODEL.fetchSpecificCarData(id);
+    private handleGetSpecificCarData = async (id: number): Promise<CarEntity> => {
+        return this.GARAGE_MODEL.fetchSpecificCarDataFromDB(id);
     };
 
-    public async handleRenderCars(): Promise<void> {
-        this.GARAGE_VIEW.renderCars(await this.GARAGE_MODEL.fetchCars());
-    }
+    public handleRenderCarsInGarage = async (): Promise<void> => {
+        this.GARAGE_VIEW.renderCarsInGarage(await this.GARAGE_MODEL.fetchCarsDataFromDB());
+    };
 
     public async init(): Promise<void> {
         this.GARAGE_VIEW.setupDOMElementsAndEventHandlers();
         await this.GARAGE_MODEL.init();
-        this.GARAGE_VIEW.updateGarageTitle(this.GARAGE_MODEL.getNumberOfCars());
-        await this.handleRenderCars();
+        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberOfCarsInGarage());
+        await this.handleRenderCarsInGarage();
     }
 }
 

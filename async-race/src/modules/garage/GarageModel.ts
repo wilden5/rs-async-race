@@ -2,23 +2,23 @@ import Constants from '../../utils/Constants';
 import { CarEntity } from '../../types/Interfaces';
 
 class GarageModel {
-    private numberOfCars: number;
+    private numberOfCarsInGarage: number;
 
     constructor() {
-        this.numberOfCars = 0;
+        this.numberOfCarsInGarage = 0;
     }
 
-    public async syncNumberOfCars(): Promise<void> {
+    public async fetchNumberOfCarsFromDB(): Promise<void> {
         const response = await fetch(Constants.GARAGE_URL);
         const data: number[] = await response.json();
-        this.numberOfCars = data.length;
+        this.numberOfCarsInGarage = data.length;
     }
 
-    public getNumberOfCars(): number {
-        return this.numberOfCars;
+    public getNumberOfCarsInGarage(): number {
+        return this.numberOfCarsInGarage;
     }
 
-    public async saveCarToDatabase(name: string, color: string): Promise<void> {
+    public async saveNewCarInDB(name: string, color: string): Promise<void> {
         const data = {
             name,
             color,
@@ -42,12 +42,12 @@ class GarageModel {
         }
     }
 
-    public async fetchCars(): Promise<CarEntity[]> {
+    public async fetchCarsDataFromDB(): Promise<CarEntity[]> {
         const response = await fetch(Constants.GARAGE_URL);
         return response.json();
     }
 
-    public async deleteCarFromDatabase(id: number): Promise<void> {
+    public async deleteCarInDB(id: number): Promise<void> {
         try {
             const response = await fetch(`${Constants.GARAGE_URL}/${id}`, {
                 method: 'DELETE',
@@ -63,7 +63,7 @@ class GarageModel {
         }
     }
 
-    public async updateCarInDatabase(name: string, color: string, id: number): Promise<void> {
+    public async updateCarInDB(name: string, color: string, id: number): Promise<void> {
         const data = {
             name,
             color,
@@ -88,7 +88,7 @@ class GarageModel {
         }
     }
 
-    public async fetchSpecificCarData(id: number): Promise<CarEntity> {
+    public async fetchSpecificCarDataFromDB(id: number): Promise<CarEntity> {
         try {
             const response = await fetch(`${Constants.GARAGE_URL}/${id}`);
 
@@ -106,7 +106,7 @@ class GarageModel {
     }
 
     public async init(): Promise<void> {
-        await this.syncNumberOfCars();
+        await this.fetchNumberOfCarsFromDB();
     }
 }
 
