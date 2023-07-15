@@ -77,19 +77,20 @@ class GarageView {
         this.UPDATE_CAR_INPUT.setAttribute('type', 'text');
         this.UPDATE_CAR_INPUT.setAttribute('placeholder', 'Select car first to open');
         this.UPDATE_CAR_COLOR.setAttribute('type', 'color');
-        this.setInputStatus('lock');
+
+        this.setInputElementsStatus(Constants.LOCK_INPUT_FIELDS);
     }
 
     private setInputElementsStatus(status: string): void {
         const array: HTMLElement[] = [this.UPDATE_CAR_INPUT, this.UPDATE_CAR_COLOR, this.UPDATE_CAR_BUTTON];
-        if (status === 'lock') {
+        if (status === Constants.LOCK_INPUT_FIELDS) {
             array.forEach((item) => {
                 const inputElement: HTMLInputElement = item as HTMLInputElement;
                 inputElement.disabled = true;
             });
         }
 
-        if (status === 'unlock') {
+        if (status === Constants.UNLOCK_INPUT_FIELDS) {
             array.forEach((item) => {
                 const inputElement: HTMLInputElement = item as HTMLInputElement;
                 inputElement.disabled = false;
@@ -106,6 +107,8 @@ class GarageView {
         const color = (this.SET_CAR_COLOR as HTMLInputElement).value;
         if (name && color) {
             this.onCreateCarButtonClick(name, color);
+            (this.CREATE_CAR_INPUT as HTMLInputElement).value = '';
+            (this.SET_CAR_COLOR as HTMLInputElement).value = '';
         }
     };
 
@@ -115,7 +118,9 @@ class GarageView {
         const id = this.ID_HOLDER.innerText;
         if (name && color) {
             this.onUpdateButtonClick(name, color, Number(id));
-            this.setInputStatus('lock');
+            this.setInputElementsStatus(Constants.LOCK_INPUT_FIELDS);
+            (this.UPDATE_CAR_INPUT as HTMLInputElement).value = '';
+            (this.UPDATE_CAR_COLOR as HTMLInputElement).value = '';
         }
     };
 
@@ -133,7 +138,7 @@ class GarageView {
                 (this.UPDATE_CAR_COLOR as HTMLInputElement).value = abc.color;
                 this.ID_HOLDER.innerText = abc.id.toString();
             });
-            this.setInputStatus('unlock');
+            this.setInputElementsStatus(Constants.UNLOCK_INPUT_FIELDS);
         }
     };
 
