@@ -1,6 +1,7 @@
 import DOMHelpers from '../../utils/DOMHelpers';
 import CommonView from '../common/CommonView';
 import { CarEntity } from '../../types/Interfaces';
+import Constants from '../../utils/Constants';
 
 class GarageView {
     private COMMON_VIEW: CommonView;
@@ -87,14 +88,23 @@ class GarageView {
     public renderCars(cars: CarEntity[]): void {
         this.CARS_CONTAINER.innerHTML = '';
         cars.forEach((car) => {
-            const carDiv = DOMHelpers.createElement('div', [`id-${car.id}`]);
+            const carDiv = DOMHelpers.createElement('div', [`id-${car.id}`, 'car-wrapper']);
             const carName = DOMHelpers.createElement(
                 'span',
-                [car.name.replace(/\s/g, '-').trim().toLowerCase()],
+                [car.name.replace(/\s/g, '-').trim().toLowerCase(), 'car-name'],
                 `${car.name}`
             );
+            const carSvg = DOMHelpers.createElement('div', [`svg-${car.id}`, 'car-image']);
+            const selectCarButton = DOMHelpers.createElement('button', [`select-${car.id}`, 'button'], 'Select Car');
+            const removeCarButton = DOMHelpers.createElement('button', [`remove-${car.id}`, 'button'], 'Remove Car');
+            carSvg.innerHTML = Constants.CAR_SVG;
+            const svgPath = carSvg.querySelector('path') as Element;
+            svgPath.setAttribute('fill', car.color);
 
             DOMHelpers.appendChildToElement(carDiv, carName);
+            DOMHelpers.appendChildToElement(carDiv, carSvg);
+            DOMHelpers.appendChildToElement(carDiv, selectCarButton);
+            DOMHelpers.appendChildToElement(carDiv, removeCarButton);
             DOMHelpers.appendChildToElement(this.CARS_CONTAINER, carDiv);
         });
     }
