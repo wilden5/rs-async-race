@@ -3,12 +3,6 @@ import GarageView from './GarageView';
 import { CarEntity } from '../../types/Interfaces';
 
 class GarageController {
-    private CURRENT_PAGE = 1;
-
-    private CARS_PER_PAGE = 7;
-
-    private TOTAL_CARS: CarEntity[] = [];
-
     private GARAGE_MODEL: GarageModel;
 
     private readonly GARAGE_VIEW: GarageView;
@@ -22,20 +16,22 @@ class GarageController {
         this.GARAGE_VIEW.onDeleteButtonClick = this.handleDeleteExistingCar;
         this.GARAGE_VIEW.onUpdateButtonClick = this.handleUpdateExistingCar;
         this.GARAGE_VIEW.onReceiveExistingCarData = this.handleGetSpecificCarData;
+        this.GARAGE_VIEW.onPrevButtonClick = this.handlePrevGaragePage;
+        this.GARAGE_VIEW.onNextButtonClick = this.handleNextGaragePage;
     }
 
     private handleAddNewCar = async (name: string, color: string): Promise<void> => {
         await this.GARAGE_MODEL.saveNewCarInDB(name, color);
         await this.GARAGE_MODEL.fetchNumberOfCarsFromDB();
         await this.handleRenderCarsInGarage();
-        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberOfCarsInGarage());
+        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberCarsInGarage());
     };
 
     private handleDeleteExistingCar = async (id: number): Promise<void> => {
         await this.GARAGE_MODEL.deleteCarInDB(id);
         await this.GARAGE_MODEL.fetchNumberOfCarsFromDB();
         await this.handleRenderCarsInGarage();
-        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberOfCarsInGarage());
+        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberCarsInGarage());
     };
 
     private handleUpdateExistingCar = async (name: string, color: string, id: number): Promise<void> => {
@@ -48,50 +44,57 @@ class GarageController {
     };
 
     public handleRenderCarsInGarage = async (): Promise<void> => {
-        this.TOTAL_CARS = await this.GARAGE_MODEL.fetchCarsDataFromDB();
-        this.limitCarsPerGaragePage(this.CURRENT_PAGE);
-
-        //this.GARAGE_VIEW.renderCarsInGarage(await this.GARAGE_MODEL.fetchCarsDataFromDB());
+        this.GARAGE_MODEL.setTotalCarsInGarage(await this.GARAGE_MODEL.fetchCarsDataFromDB());
+        this.limitCarsPerGaragePage(this.GARAGE_MODEL.getCurrentGaragePage());
     };
 
     public limitCarsPerGaragePage(page: number): void {
-        const startIndex = (page - 1) * this.CARS_PER_PAGE;
-        const endIndex = page * this.CARS_PER_PAGE;
-        const carsForPage = this.TOTAL_CARS.slice(startIndex, endIndex);
+        const totalCars = this.GARAGE_MODEL.getTotalCarsInGarage();
+        const carsPerPage = this.GARAGE_MODEL.getCarsPerGaragePage();
+        const startIndex = (page - 1) * carsPerPage;
+        const endIndex = page * carsPerPage;
+        const carsForPage = totalCars.slice(startIndex, endIndex);
+
         this.GARAGE_VIEW.renderCarsInGarage(carsForPage);
         this.updatePaginationButtons(page);
     }
 
     private updatePaginationButtons(currentPage: number): void {
-        (this.GARAGE_VIEW.PAGINATION_PREV_BUTTON as HTMLButtonElement).disabled = currentPage === 1;
+        const totalCars = this.GARAGE_MODEL.getTotalCarsInGarage();
+        const carsPerPage = this.GARAGE_MODEL.getCarsPerGaragePage();
+        const totalPages = Math.ceil(totalCars.length / carsPerPage);
 
-        const totalPages = Math.ceil(this.TOTAL_CARS.length / this.CARS_PER_PAGE);
+        (this.GARAGE_VIEW.PAGINATION_PREV_BUTTON as HTMLButtonElement).disabled = currentPage === 1;
         (this.GARAGE_VIEW.PAGINATION_NEXT_BUTTON as HTMLButtonElement).disabled = currentPage === totalPages;
     }
 
-    private handlePrevButtonClick = (): void => {
-        if (this.CURRENT_PAGE > 1) {
-            this.CURRENT_PAGE -= 1;
-            this.limitCarsPerGaragePage(this.CURRENT_PAGE);
+    private handlePrevGaragePage = (): void => {
+        const currentPage = this.GARAGE_MODEL.getCurrentGaragePage();
+        if (currentPage > 1) {
+            this.GARAGE_MODEL.setCurrentGaragePage(currentPage - 1);
+            this.GARAGE_VIEW.updateGaragePageNumber(currentPage - 1);
+            this.limitCarsPerGaragePage(currentPage - 1);
         }
     };
 
-    private handleNextButtonClick = (): void => {
-        const totalPages = Math.ceil(this.TOTAL_CARS.length / this.CARS_PER_PAGE);
-        if (this.CURRENT_PAGE < totalPages) {
-            this.CURRENT_PAGE += 1;
-            this.limitCarsPerGaragePage(this.CURRENT_PAGE);
+    private handleNextGaragePage = (): void => {
+        const totalCars = this.GARAGE_MODEL.getTotalCarsInGarage();
+        const currentPage = this.GARAGE_MODEL.getCurrentGaragePage();
+        const carsPerPage = this.GARAGE_MODEL.getCarsPerGaragePage();
+        const totalPages = Math.ceil(totalCars.length / carsPerPage);
+
+        if (currentPage < totalPages) {
+            this.GARAGE_MODEL.setCurrentGaragePage(currentPage + 1);
+            this.GARAGE_VIEW.updateGaragePageNumber(currentPage + 1);
+            this.limitCarsPerGaragePage(currentPage + 1);
         }
     };
 
     public async init(): Promise<void> {
         this.GARAGE_VIEW.setupDOMElementsAndEventHandlers();
         await this.GARAGE_MODEL.init();
-        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberOfCarsInGarage());
+        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberCarsInGarage());
         await this.handleRenderCarsInGarage();
-
-        this.GARAGE_VIEW.PAGINATION_PREV_BUTTON.addEventListener('click', this.handlePrevButtonClick);
-        this.GARAGE_VIEW.PAGINATION_NEXT_BUTTON.addEventListener('click', this.handleNextButtonClick);
     }
 }
 

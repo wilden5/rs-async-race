@@ -44,6 +44,10 @@ class GarageView {
 
     public onReceiveExistingCarData: (id: number) => Promise<CarEntity> = () => Promise.resolve({} as CarEntity);
 
+    public onPrevButtonClick: () => void = () => {};
+
+    public onNextButtonClick: () => void = () => {};
+
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
         this.GARAGE_TITLE = DOMHelpers.createElement('div', ['garage__title'], 'Garage');
@@ -114,6 +118,10 @@ class GarageView {
         this.GARAGE_TITLE.innerText = `Garage (${numberOfCars})`;
     }
 
+    public updateGaragePageNumber(pageNumber: number): void {
+        this.GARAGE_PAGE.innerText = `Page #${pageNumber}`;
+    }
+
     private handleCreateCarButtonClick = (): void => {
         const name = (this.CREATE_CAR_INPUT as HTMLInputElement).value;
         const color = (this.SET_CAR_COLOR as HTMLInputElement).value;
@@ -180,6 +188,8 @@ class GarageView {
         this.CREATE_CAR_BUTTON.addEventListener('click', this.handleCreateCarButtonClick);
         this.CARS_CONTAINER.addEventListener('click', this.handleCarSpecificButtons);
         this.UPDATE_CAR_BUTTON.addEventListener('click', this.handleUpdateCarButtonClick);
+        this.PAGINATION_PREV_BUTTON.addEventListener('click', this.onPrevButtonClick);
+        this.PAGINATION_NEXT_BUTTON.addEventListener('click', this.onNextButtonClick);
     }
 }
 

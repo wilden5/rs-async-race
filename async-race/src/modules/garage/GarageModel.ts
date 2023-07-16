@@ -2,20 +2,49 @@ import Constants from '../../utils/Constants';
 import { CarEntity } from '../../types/Interfaces';
 
 class GarageModel {
-    private numberOfCarsInGarage: number;
+    private NUMBER_CARS_IN_GARAGE: number;
+
+    private CURRENT_GARAGE_PAGE: number;
+
+    private readonly CARS_PER_GARAGE_PAGE: number;
+
+    private TOTAL_CARS_IN_GARAGE: CarEntity[];
 
     constructor() {
-        this.numberOfCarsInGarage = 0;
+        this.NUMBER_CARS_IN_GARAGE = 0;
+        this.CURRENT_GARAGE_PAGE = 1;
+        this.CARS_PER_GARAGE_PAGE = 7;
+        this.TOTAL_CARS_IN_GARAGE = [];
     }
 
     public async fetchNumberOfCarsFromDB(): Promise<void> {
         const response = await fetch(Constants.GARAGE_URL);
         const data: number[] = await response.json();
-        this.numberOfCarsInGarage = data.length;
+        this.NUMBER_CARS_IN_GARAGE = data.length;
     }
 
-    public getNumberOfCarsInGarage(): number {
-        return this.numberOfCarsInGarage;
+    public getNumberCarsInGarage(): number {
+        return this.NUMBER_CARS_IN_GARAGE;
+    }
+
+    public getCurrentGaragePage(): number {
+        return this.CURRENT_GARAGE_PAGE;
+    }
+
+    public setCurrentGaragePage(page: number): void {
+        this.CURRENT_GARAGE_PAGE = page;
+    }
+
+    public getCarsPerGaragePage(): number {
+        return this.CARS_PER_GARAGE_PAGE;
+    }
+
+    public getTotalCarsInGarage(): CarEntity[] {
+        return this.TOTAL_CARS_IN_GARAGE;
+    }
+
+    public setTotalCarsInGarage(cars: CarEntity[]): void {
+        this.TOTAL_CARS_IN_GARAGE = cars;
     }
 
     public async saveNewCarInDB(name: string, color: string): Promise<void> {
