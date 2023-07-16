@@ -146,6 +146,11 @@ class GarageView {
 
     private handleCarSpecificButtons = (event: Event): void => {
         const { target } = event;
+
+        if (Constants.EXCLUDED_ELEMENTS_FROM_DELEGATION.includes((target as HTMLElement).tagName.toLowerCase())) {
+            return;
+        }
+
         const id = (target as HTMLElement).classList[0].split('-')[1];
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.REMOVE_BUTTON_IDENTIFIER)) {
