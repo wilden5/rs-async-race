@@ -1,10 +1,25 @@
-.garage__title {
+.garage-button {
+  margin-right: 1rem;
+}
+
+.garage-title {
   margin-bottom: 2rem;
   font-size: 4rem;
 }
 
-.garage__page {
+.garage-page-container {
+  display: flex;
+  align-items: center;
+}
+
+.garage-page {
   font-size: 2rem;
+  min-width: 7.5rem;
+  margin-right: 1rem;
+}
+
+.pag-prev-button {
+  margin-right: 1rem;
 }
 
 .create-container {
@@ -25,12 +40,20 @@
   display: none;
 }
 
-.pagination-container {
-  margin-top: 5rem;
-}
-
 .update-container {
   margin-bottom: 1rem;
+}
+
+.create-color,
+.update-color {
+  height: 2.1rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
+
+.create-button,
+.update-button {
+  width: 8.1rem;
 }
 
 .button,

@@ -8,6 +8,8 @@ class GarageView {
 
     public GARAGE_TITLE: HTMLElement;
 
+    private GARAGE_PAGE_CONTAINER: HTMLElement;
+
     public GARAGE_PAGE: HTMLElement;
 
     public CREATE_CONTAINER: HTMLElement;
@@ -56,8 +58,9 @@ class GarageView {
 
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
-        this.GARAGE_TITLE = DOMHelpers.createElement('div', ['garage__title'], 'Garage');
-        this.GARAGE_PAGE = DOMHelpers.createElement('div', ['garage__page'], 'Page #1');
+        this.GARAGE_TITLE = DOMHelpers.createElement('div', ['garage-title'], 'Garage');
+        this.GARAGE_PAGE_CONTAINER = DOMHelpers.createElement('div', ['garage-page-container']);
+        this.GARAGE_PAGE = DOMHelpers.createElement('div', ['garage-page'], 'Page #1');
         this.CREATE_CONTAINER = DOMHelpers.createElement('div', ['create-container']);
         this.CREATE_CAR_INPUT = DOMHelpers.createElement('input', ['create-car']);
         this.SET_CAR_COLOR = DOMHelpers.createElement('input', ['create-color']);
@@ -77,7 +80,10 @@ class GarageView {
 
     private appendElements(): void {
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.GARAGE_TITLE);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.GARAGE_PAGE);
+        DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.GARAGE_PAGE_CONTAINER);
+        DOMHelpers.appendChildToElement(this.GARAGE_PAGE_CONTAINER, this.GARAGE_PAGE);
+        DOMHelpers.appendChildToElement(this.GARAGE_PAGE_CONTAINER, this.PAGINATION_PREV_BUTTON);
+        DOMHelpers.appendChildToElement(this.GARAGE_PAGE_CONTAINER, this.PAGINATION_NEXT_BUTTON);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.CARS_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.PAGINATION_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.CREATE_CONTAINER);
@@ -90,8 +96,6 @@ class GarageView {
         DOMHelpers.appendChildToElement(this.UPDATE_CONTAINER, this.UPDATE_CAR_INPUT);
         DOMHelpers.appendChildToElement(this.UPDATE_CONTAINER, this.UPDATE_CAR_COLOR);
         DOMHelpers.appendChildToElement(this.UPDATE_CONTAINER, this.UPDATE_CAR_BUTTON);
-        DOMHelpers.appendChildToElement(this.PAGINATION_CONTAINER, this.PAGINATION_PREV_BUTTON);
-        DOMHelpers.appendChildToElement(this.PAGINATION_CONTAINER, this.PAGINATION_NEXT_BUTTON);
         DOMHelpers.appendChildToElement(this.FEATURES_CONTAINER, this.GENERATE_CARS_BUTTON);
     }
 
