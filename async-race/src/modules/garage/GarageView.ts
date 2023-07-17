@@ -181,18 +181,44 @@ class GarageView {
         this.CARS_CONTAINER.innerHTML = '';
         cars.forEach((car) => {
             const carDiv = DOMHelpers.createElement('div', [`id-${car.id}`, 'car-wrapper']);
-            const carName = DOMHelpers.createElement('span', [`name-${car.id}`, 'car-name'], `${car.name}`);
+            const carButtonsContainer = DOMHelpers.createElement('div', ['car-buttons-container']);
+            const carName = DOMHelpers.createElement('div', [`name-${car.id}`, 'car-name'], `${car.name}`);
             const carSvg = DOMHelpers.createElement('div', [`svg-${car.id}`, 'car-image']);
-            const selectCarButton = DOMHelpers.createElement('button', [`select-${car.id}`, 'button'], 'Select Car');
-            const removeCarButton = DOMHelpers.createElement('button', [`remove-${car.id}`, 'button'], 'Remove Car');
+            const carRoute = DOMHelpers.createElement('div', [`route-${car.id}`, 'car-route']);
+            const carFinishFlag = DOMHelpers.createElement('div', [`finish-${car.id}`, 'car-finish-flag']);
+            const selectCarButton = DOMHelpers.createElement(
+                'button',
+                [`select-${car.id}`, 'car-button'],
+                'Select Car'
+            );
+            const removeCarButton = DOMHelpers.createElement(
+                'button',
+                [`remove-${car.id}`, 'car-button'],
+                'Remove Car'
+            );
+            const startCarEngineButton = DOMHelpers.createElement(
+                'button',
+                [`start-engine-${car.id}`, 'car-button'],
+                'Start Engine'
+            );
+            const stopCarEngineButton = DOMHelpers.createElement(
+                'button',
+                [`stop-engine-${car.id}`, 'car-button'],
+                'Stop Engine'
+            );
             carSvg.innerHTML = Constants.CAR_SVG;
             const svgPath = carSvg.querySelector('path') as Element;
             svgPath.setAttribute('fill', car.color);
 
             DOMHelpers.appendChildToElement(carDiv, carName);
+            DOMHelpers.appendChildToElement(carDiv, carButtonsContainer);
+            DOMHelpers.appendChildToElement(carButtonsContainer, startCarEngineButton);
+            DOMHelpers.appendChildToElement(carButtonsContainer, stopCarEngineButton);
             DOMHelpers.appendChildToElement(carDiv, carSvg);
-            DOMHelpers.appendChildToElement(carDiv, selectCarButton);
-            DOMHelpers.appendChildToElement(carDiv, removeCarButton);
+            DOMHelpers.appendChildToElement(carDiv, carRoute);
+            DOMHelpers.appendChildToElement(carRoute, carFinishFlag);
+            DOMHelpers.appendChildToElement(carButtonsContainer, selectCarButton);
+            DOMHelpers.appendChildToElement(carButtonsContainer, removeCarButton);
             DOMHelpers.appendChildToElement(this.CARS_CONTAINER, carDiv);
         });
     }

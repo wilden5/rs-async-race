@@ -29,7 +29,7 @@ class Constants {
 
     static FETCH_SPECIFIC_CAR_FAIL_MESSAGE = 'Failed to receive car';
 
-    static EXCLUDED_ELEMENTS_FROM_DELEGATION = ['path', 'circle', 'svg'];
+    static EXCLUDED_ELEMENTS_FROM_DELEGATION = ['path', 'circle', 'svg', 'div'];
 
     static RANDOM_CARS_BRANDS = [
         'Toyota',

@@ -33,6 +33,36 @@
   margin-bottom: 1rem;
 }
 
-.button {
+.button,
+.car-button {
   cursor: pointer;
+}
+
+.car-name {
+  margin-bottom: 0.5rem;
+}
+
+.car-buttons-container {
+  margin-bottom: 1rem;
+}
+
+.car-button{
+  margin-right: 1rem;
+}
+
+.car-route {
+  position: relative;
+  border: 0.2rem dashed grey;
+}
+
+.car-finish-flag {
+  position: absolute;
+  left: 80%;
+  bottom: 100%;
+  width: 2.5rem;
+  height: 3.4rem;
+  background-image: url('../../assets/traffic-light-icon.png');
+  background-repeat: no-repeat;
+  background-size: 2.5rem 3.3rem;
+  margin-bottom: 0.3rem;
 }
