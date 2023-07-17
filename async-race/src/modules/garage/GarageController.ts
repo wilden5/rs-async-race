@@ -18,10 +18,18 @@ class GarageController {
         this.GARAGE_VIEW.onReceiveExistingCarData = this.handleGetSpecificCarData;
         this.GARAGE_VIEW.onPrevButtonClick = this.handlePrevGaragePage;
         this.GARAGE_VIEW.onNextButtonClick = this.handleNextGaragePage;
+        this.GARAGE_VIEW.onGenerateButtonClick = this.handleRandomGeneratedCars;
     }
 
     private handleAddNewCar = async (name: string, color: string): Promise<void> => {
         await this.GARAGE_MODEL.saveNewCarInDB(name, color);
+        await this.GARAGE_MODEL.fetchNumberOfCarsFromDB();
+        await this.handleRenderCarsInGarage();
+        this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberCarsInGarage());
+    };
+
+    private handleRandomGeneratedCars = async (): Promise<void> => {
+        await this.GARAGE_MODEL.saveRandomGeneratedCarsInDB();
         await this.GARAGE_MODEL.fetchNumberOfCarsFromDB();
         await this.handleRenderCarsInGarage();
         this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberCarsInGarage());

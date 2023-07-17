@@ -117,6 +117,32 @@ class GarageModel {
         return {} as CarEntity;
     }
 
+    public async saveRandomGeneratedCarsInDB(): Promise<void> {
+        const carPromises: Promise<void>[] = [];
+
+        for (let i = 0; i < 100; i += 1) {
+            const carName = this.generateRandomCarName();
+            const carColor = this.generateRandomCarColor();
+            const carPromise = this.saveNewCarInDB(carName, carColor);
+            carPromises.push(carPromise);
+        }
+        await Promise.all(carPromises);
+    }
+
+    private generateRandomCarName(): string {
+        const randomBrandIndex: number = Math.floor(Math.random() * Constants.RANDOM_CARS_BRANDS.length);
+        const randomModelIndex: number = Math.floor(Math.random() * Constants.RANDOM_CARS_MODELS.length);
+        return `${Constants.RANDOM_CARS_BRANDS[randomBrandIndex]} ${Constants.RANDOM_CARS_MODELS[randomModelIndex]}`;
+    }
+
+    private generateRandomCarColor(): string {
+        let color = '#';
+        for (let i = 0; i < 6; i += 1) {
+            color += Constants.COLOR_PICKER_LETTERS[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
     public async init(): Promise<void> {
         await this.fetchNumberOfCarsFromDB();
     }

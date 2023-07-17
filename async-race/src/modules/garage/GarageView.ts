@@ -36,6 +36,10 @@ class GarageView {
 
     public PAGINATION_PREV_BUTTON: HTMLElement;
 
+    public FEATURES_CONTAINER: HTMLElement;
+
+    public GENERATE_CARS_BUTTON: HTMLElement;
+
     public onCreateCarButtonClick: (name: string, color: string) => void = () => {};
 
     public onDeleteButtonClick: (id: number) => void = () => {};
@@ -47,6 +51,8 @@ class GarageView {
     public onPrevButtonClick: () => void = () => {};
 
     public onNextButtonClick: () => void = () => {};
+
+    public onGenerateButtonClick: () => void = () => {};
 
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
@@ -65,6 +71,8 @@ class GarageView {
         this.PAGINATION_CONTAINER = DOMHelpers.createElement('div', ['pagination-container']);
         this.PAGINATION_NEXT_BUTTON = DOMHelpers.createElement('button', ['pag-next-button', 'button'], 'Next');
         this.PAGINATION_PREV_BUTTON = DOMHelpers.createElement('button', ['pag-prev-button', 'button'], 'Previous');
+        this.FEATURES_CONTAINER = DOMHelpers.createElement('div', ['features-container']);
+        this.GENERATE_CARS_BUTTON = DOMHelpers.createElement('button', ['gen-cars-button', 'button'], 'Generate Cars');
     }
 
     private appendElements(): void {
@@ -74,6 +82,7 @@ class GarageView {
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.PAGINATION_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.CREATE_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.UPDATE_CONTAINER);
+        DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.FEATURES_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.ID_HOLDER);
         DOMHelpers.appendChildToElement(this.CREATE_CONTAINER, this.CREATE_CAR_INPUT);
         DOMHelpers.appendChildToElement(this.CREATE_CONTAINER, this.SET_CAR_COLOR);
@@ -83,6 +92,7 @@ class GarageView {
         DOMHelpers.appendChildToElement(this.UPDATE_CONTAINER, this.UPDATE_CAR_BUTTON);
         DOMHelpers.appendChildToElement(this.PAGINATION_CONTAINER, this.PAGINATION_PREV_BUTTON);
         DOMHelpers.appendChildToElement(this.PAGINATION_CONTAINER, this.PAGINATION_NEXT_BUTTON);
+        DOMHelpers.appendChildToElement(this.FEATURES_CONTAINER, this.GENERATE_CARS_BUTTON);
     }
 
     private setInputElements(): void {
@@ -195,6 +205,7 @@ class GarageView {
         this.UPDATE_CAR_BUTTON.addEventListener('click', this.handleUpdateCarButtonClick);
         this.PAGINATION_PREV_BUTTON.addEventListener('click', this.onPrevButtonClick);
         this.PAGINATION_NEXT_BUTTON.addEventListener('click', this.onNextButtonClick);
+        this.GENERATE_CARS_BUTTON.addEventListener('click', this.onGenerateButtonClick);
     }
 }
 
