@@ -15,3 +15,30 @@
     display: none;
   }
 }
+
+.footer-container {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: grey;
+  color: white;
+}
+
+.footer-author {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    color: darkred;
+    transition: ease-in-out 0.8s;
+  }
+}
+
+.footer-school-img {
+  height: 2.5rem;
+}
