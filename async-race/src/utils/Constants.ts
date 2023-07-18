@@ -3,6 +3,8 @@ class Constants {
 
     static WINNERS_URL = 'http://127.0.0.1:3000/winners';
 
+    static ENGINE_URL = 'http://127.0.0.1:3000/engine';
+
     static LOCK_INPUT_FIELDS = 'lock';
 
     static UNLOCK_INPUT_FIELDS = 'unlock';
@@ -10,6 +12,12 @@ class Constants {
     static REMOVE_BUTTON_IDENTIFIER = 'remove';
 
     static SELECT_BUTTON_IDENTIFIER = 'select';
+
+    static START_ENGINE_IDENTIFIER = 'start';
+
+    static ENGINE_START = 'started';
+
+    static STOP_ENGINE_IDENTIFIER = 'stop';
 
     static DEFAULT_COLOR_PICKER = '#000000';
 

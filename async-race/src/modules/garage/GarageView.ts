@@ -56,6 +56,8 @@ class GarageView {
 
     public onGenerateButtonClick: () => void = () => {};
 
+    public onStartEngineButtonClick: (id: number, status: string) => void = () => {};
+
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
         this.GARAGE_TITLE = DOMHelpers.createElement('div', ['garage-title'], 'Garage');
@@ -167,6 +169,10 @@ class GarageView {
 
         const id = (target as HTMLElement).classList[0].split('-')[1];
 
+        if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.START_ENGINE_IDENTIFIER)) {
+            this.onStartEngineButtonClick(Number(id), Constants.ENGINE_START);
+        }
+
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.REMOVE_BUTTON_IDENTIFIER)) {
             this.onDeleteButtonClick(Number(id));
         }
@@ -202,12 +208,12 @@ class GarageView {
             );
             const startCarEngineButton = DOMHelpers.createElement(
                 'button',
-                [`start-engine-${car.id}`, 'car-button'],
+                [`start-${car.id}`, 'car-button'],
                 'Start Engine'
             );
             const stopCarEngineButton = DOMHelpers.createElement(
                 'button',
-                [`stop-engine-${car.id}`, 'car-button'],
+                [`stop-${car.id}`, 'car-button'],
                 'Stop Engine'
             );
             carSvg.innerHTML = Constants.CAR_SVG;

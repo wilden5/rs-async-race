@@ -143,6 +143,26 @@ class GarageModel {
         return color;
     }
 
+    public async fetchSpecificCarEngineTime(id: number, status: string): Promise<number> {
+        const response = await fetch(`${Constants.ENGINE_URL}?id=${id}&status=${status}`, {
+            method: 'PATCH',
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            let time = Math.floor(data.distance / data.velocity);
+
+            if (time === 10000) {
+                time -= Math.floor(Math.random() * 101);
+            }
+
+            console.log(`Time is ${time}`);
+            return time;
+        }
+        console.log('Error during time calculating');
+        return 0;
+    }
+
     public async init(): Promise<void> {
         await this.fetchNumberOfCarsFromDB();
     }
