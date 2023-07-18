@@ -56,7 +56,7 @@ class GarageView {
 
     public onGenerateButtonClick: () => void = () => {};
 
-    public onStartEngineButtonClick: (id: number, status: string) => void = () => {};
+    public onStartEngineButtonClick: (id: number) => void = () => {};
 
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
@@ -170,7 +170,7 @@ class GarageView {
         const id = (target as HTMLElement).classList[0].split('-')[1];
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.START_ENGINE_IDENTIFIER)) {
-            this.onStartEngineButtonClick(Number(id), Constants.ENGINE_START);
+            this.onStartEngineButtonClick(Number(id));
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.REMOVE_BUTTON_IDENTIFIER)) {

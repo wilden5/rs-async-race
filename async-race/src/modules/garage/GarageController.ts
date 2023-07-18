@@ -99,9 +99,8 @@ class GarageController {
         }
     };
 
-    private handleSpecificCarAnimation = async (id: number, status: string): Promise<void> => {
-        const carEngineTime = await this.GARAGE_MODEL.fetchSpecificCarEngineTime(id, status);
-        await this.GARAGE_MODEL.animateSpecificCar(id, carEngineTime);
+    private handleSpecificCarAnimation = async (id: number): Promise<void> => {
+        await this.GARAGE_MODEL.animateSpecificCar(id);
     };
 
     public async init(): Promise<void> {
