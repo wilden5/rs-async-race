@@ -1,5 +1,6 @@
 import Constants from '../../utils/Constants';
 import { CarEntity } from '../../types/Interfaces';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class GarageModel {
     private NUMBER_CARS_IN_GARAGE: number;
@@ -161,6 +162,33 @@ class GarageModel {
         }
         console.log('Error during time calculating');
         return 0;
+    }
+
+    public async animateSpecificCar(id: number, carEngineTime: number): Promise<void> {
+        const distanceInViewPort: number = document.documentElement.clientWidth * 0.75; // 0.75 distance on what car animated until the stoplight
+        const carToAnimate: HTMLElement = DOMHelpers.getElement(`.car-${id}`);
+
+        let startTime: number;
+        let currentPosition: number;
+
+        function step(timestamp: number): void {
+            if (!startTime) {
+                startTime = timestamp;
+            }
+
+            const progress = (timestamp - startTime) / carEngineTime;
+
+            currentPosition = progress * distanceInViewPort;
+
+            carToAnimate.style.transform = `translateX(${currentPosition}px)`;
+
+            if (progress < 1) {
+                requestAnimationFrame(step);
+            } else {
+                console.log('Animation complete');
+            }
+        }
+        requestAnimationFrame(step);
     }
 
     public async init(): Promise<void> {

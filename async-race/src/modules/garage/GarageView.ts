@@ -193,7 +193,7 @@ class GarageView {
             const carDiv = DOMHelpers.createElement('div', [`id-${car.id}`, 'car-wrapper']);
             const carButtonsContainer = DOMHelpers.createElement('div', ['car-buttons-container']);
             const carName = DOMHelpers.createElement('div', [`name-${car.id}`, 'car-name'], `${car.name}`);
-            const carSvg = DOMHelpers.createElement('div', [`svg-${car.id}`, 'car-image']);
+            const carSvg = DOMHelpers.createElement('div', [`car-${car.id}`, 'car']);
             const carRoute = DOMHelpers.createElement('div', [`route-${car.id}`, 'car-route']);
             const carFinishFlag = DOMHelpers.createElement('div', [`finish-${car.id}`, 'car-finish-flag']);
             const selectCarButton = DOMHelpers.createElement(

@@ -19,7 +19,7 @@ class GarageController {
         this.GARAGE_VIEW.onPrevButtonClick = this.handlePrevGaragePage;
         this.GARAGE_VIEW.onNextButtonClick = this.handleNextGaragePage;
         this.GARAGE_VIEW.onGenerateButtonClick = this.handleRandomGeneratedCars;
-        this.GARAGE_VIEW.onStartEngineButtonClick = this.handleSpecificCarEngine;
+        this.GARAGE_VIEW.onStartEngineButtonClick = this.handleSpecificCarAnimation;
     }
 
     private handleAddNewCar = async (name: string, color: string): Promise<void> => {
@@ -99,8 +99,9 @@ class GarageController {
         }
     };
 
-    private handleSpecificCarEngine = async (id: number, status: string): Promise<void> => {
-        await this.GARAGE_MODEL.fetchSpecificCarEngineTime(id, status);
+    private handleSpecificCarAnimation = async (id: number, status: string): Promise<void> => {
+        const carEngineTime = await this.GARAGE_MODEL.fetchSpecificCarEngineTime(id, status);
+        await this.GARAGE_MODEL.animateSpecificCar(id, carEngineTime);
     };
 
     public async init(): Promise<void> {
