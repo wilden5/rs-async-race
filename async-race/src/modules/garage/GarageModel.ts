@@ -1,5 +1,5 @@
 import Constants from '../../utils/Constants';
-import { CarEntity } from '../../types/Interfaces';
+import { CarEntity, EngineStatus } from '../../types/Interfaces';
 import DOMHelpers from '../../utils/DOMHelpers';
 
 class GarageModel {
@@ -10,6 +10,8 @@ class GarageModel {
     private readonly CARS_PER_GARAGE_PAGE: number;
 
     private TOTAL_CARS_IN_GARAGE: CarEntity[];
+
+    private ENGINES_STATUSES: EngineStatus = {};
 
     constructor() {
         this.NUMBER_CARS_IN_GARAGE = 0;
@@ -144,8 +146,8 @@ class GarageModel {
         return color;
     }
 
-    public async fetchSpecificCarEngineTime(id: number): Promise<number> {
-        const response = await fetch(`${Constants.ENGINE_URL}?id=${id}&status=started`, {
+    public async useSpecificCarEngine(id: number, action: string): Promise<number> {
+        const response = await fetch(`${Constants.ENGINE_URL}?id=${id}&status=${action}`, {
             method: 'PATCH',
         });
 
@@ -153,77 +155,62 @@ class GarageModel {
             const data = await response.json();
             const time = data.distance / data.velocity;
             console.log(`Time is ${time}ms`);
+
+            if (action === Constants.ENGINE_STOP) {
+                this.ENGINES_STATUSES[id] = true;
+                console.log(this.ENGINES_STATUSES);
+            }
+
             return time;
         }
         console.log('Error during time calculating');
         return 0;
     }
 
-    public stopCarEngine(id: number): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            fetch(`${Constants.ENGINE_URL}?id=${id}&status=stopped`, {
-                method: 'PATCH',
-            }).then((response) => {
-                if (response.ok) {
-                    console.log(`Car with id-${id} successfully stopped`);
-                    resolve();
-                } else {
-                    reject(new Error());
-                }
-            });
+    public async switchSpecificCarEngineToDrive(id: number): Promise<void> {
+        const response = await fetch(`${Constants.ENGINE_URL}?id=${id}&status=drive`, {
+            method: 'PATCH',
         });
-    }
 
-    public switchSpecificCarEngineToDrive(id: number): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            fetch(`${Constants.ENGINE_URL}?id=${id}&status=drive`, {
-                method: 'PATCH',
-            }).then((response) => {
-                if (response.ok) {
-                    console.log(`Car with id-${id} successfully finished`);
-                    resolve();
-                } else {
-                    reject(new Error(`Car with id-${id} broke down the engine :(`));
-                }
-            });
-        });
+        if (response.ok) {
+            console.log(`Car with id-${id} successfully finished`);
+        } else {
+            throw new Error(`Car with id-${id} broke down the engine :(`);
+        }
     }
 
     public async animateSpecificCar(id: number): Promise<void> {
-        const time = await this.fetchSpecificCarEngineTime(id);
+        const engineTime = await this.useSpecificCarEngine(id, Constants.ENGINE_START);
         const distanceInViewPort: number = document.documentElement.clientWidth * 0.75; // 0.75 is where traffic-light placed
         const carToAnimate: HTMLElement = DOMHelpers.getElement(`.car-${id}`);
 
         let startTime: number;
         let currentPosition: number;
-        let shouldContinue = true;
+        let animationFrameId: number | null = null;
 
-        const animationPromise = new Promise<void>((resolve) => {
-            function step(timestamp: number): void {
-                if (!startTime) {
-                    startTime = timestamp;
-                }
-
-                const progress = (timestamp - startTime) / time;
-
-                currentPosition = progress * distanceInViewPort;
-
-                carToAnimate.style.transform = `translateX(${currentPosition}px)`;
-
-                if (progress < 1 && shouldContinue) {
-                    requestAnimationFrame(step);
-                } else {
-                    resolve();
-                }
+        const step = (timestamp: number): void => {
+            if (!startTime) {
+                startTime = timestamp;
             }
 
-            requestAnimationFrame(step);
-        });
+            const progress = (timestamp - startTime) / engineTime;
+            currentPosition = progress * distanceInViewPort;
+            carToAnimate.style.transform = `translateX(${currentPosition}px)`;
+
+            if (progress < 1) {
+                animationFrameId = requestAnimationFrame(step);
+                if (this.ENGINES_STATUSES[id]) {
+                    carToAnimate.style.transform = 'none';
+                    cancelAnimationFrame(animationFrameId);
+                }
+            }
+        };
+        animationFrameId = requestAnimationFrame(step);
 
         try {
-            await Promise.race([animationPromise, this.switchSpecificCarEngineToDrive(id)]);
+            await this.switchSpecificCarEngineToDrive(id);
         } catch (error) {
-            shouldContinue = false;
+            cancelAnimationFrame(animationFrameId);
             console.log(error);
         }
     }

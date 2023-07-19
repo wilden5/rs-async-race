@@ -3,3 +3,7 @@ export interface CarEntity {
     color: string;
     id: number;
 }
+
+export interface EngineStatus {
+    [id: number]: boolean;
+}

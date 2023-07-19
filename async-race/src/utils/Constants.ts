@@ -95,7 +95,7 @@ class Constants {
 
     static RS_SCHOOL_IMG_LINK = 'https://rs.school/images/rs_school_js.svg';
 
-    static RACE_IDENTIFIER = 'race';
+    static START_RACE_IDENTIFIER = 'race';
 
     static GENERATE_CARS_IDENTIFIER = 'generate';
 
