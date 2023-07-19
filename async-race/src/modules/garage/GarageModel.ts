@@ -228,6 +228,15 @@ class GarageModel {
         }
     }
 
+    public async startRaceOnSpecificPage(): Promise<void> {
+        const carIds: string[] = [];
+        DOMHelpers.getElements('.car-wrapper').forEach((item) => {
+            carIds.push(item.classList[0].split('-')[1]);
+        });
+        const animationPromises = carIds.map((id) => this.animateSpecificCar(Number(id)));
+        await Promise.all(animationPromises);
+    }
+
     public async init(): Promise<void> {
         await this.fetchNumberOfCarsFromDB();
     }

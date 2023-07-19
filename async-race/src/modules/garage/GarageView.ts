@@ -42,6 +42,8 @@ class GarageView {
 
     public GENERATE_CARS_BUTTON: HTMLElement;
 
+    public RACE_BUTTON: HTMLElement;
+
     public onCreateCarButtonClick: (name: string, color: string) => void = () => {};
 
     public onDeleteButtonClick: (id: number) => void = () => {};
@@ -57,6 +59,8 @@ class GarageView {
     public onGenerateButtonClick: () => void = () => {};
 
     public onStartEngineButtonClick: (id: number) => void = () => {};
+
+    public onRaceButtonClick: () => void = () => {};
 
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
@@ -78,6 +82,7 @@ class GarageView {
         this.PAGINATION_PREV_BUTTON = DOMHelpers.createElement('button', ['pag-prev-button', 'button'], 'Previous');
         this.FEATURES_CONTAINER = DOMHelpers.createElement('div', ['features-container']);
         this.GENERATE_CARS_BUTTON = DOMHelpers.createElement('button', ['gen-cars-button', 'button'], 'Generate Cars');
+        this.RACE_BUTTON = DOMHelpers.createElement('button', ['race-button', 'button'], 'Race');
     }
 
     private appendElements(): void {
@@ -98,6 +103,7 @@ class GarageView {
         DOMHelpers.appendChildToElement(this.UPDATE_CONTAINER, this.UPDATE_CAR_INPUT);
         DOMHelpers.appendChildToElement(this.UPDATE_CONTAINER, this.UPDATE_CAR_COLOR);
         DOMHelpers.appendChildToElement(this.UPDATE_CONTAINER, this.UPDATE_CAR_BUTTON);
+        DOMHelpers.appendChildToElement(this.FEATURES_CONTAINER, this.RACE_BUTTON);
         DOMHelpers.appendChildToElement(this.FEATURES_CONTAINER, this.GENERATE_CARS_BUTTON);
     }
 
@@ -157,6 +163,23 @@ class GarageView {
             this.setInputElementsStatus(Constants.LOCK_INPUT_FIELDS);
             (this.UPDATE_CAR_INPUT as HTMLInputElement).value = '';
             (this.UPDATE_CAR_COLOR as HTMLInputElement).value = Constants.DEFAULT_COLOR_PICKER;
+        }
+    };
+
+    private handleFeatureButtons = (event: Event): void => {
+        const { target } = event;
+
+        if (Constants.EXCLUDED_ELEMENTS_FROM_DELEGATION.includes((target as HTMLElement).tagName.toLowerCase())) {
+            return;
+        }
+
+        if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.RACE_IDENTIFIER)) {
+            (this.RACE_BUTTON as HTMLButtonElement).disabled = true;
+            this.onRaceButtonClick();
+        }
+
+        if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.GENERATE_CARS_IDENTIFIER)) {
+            this.onGenerateButtonClick();
         }
     };
 
@@ -244,7 +267,7 @@ class GarageView {
         this.UPDATE_CAR_BUTTON.addEventListener('click', this.handleUpdateCarButtonClick);
         this.PAGINATION_PREV_BUTTON.addEventListener('click', this.onPrevButtonClick);
         this.PAGINATION_NEXT_BUTTON.addEventListener('click', this.onNextButtonClick);
-        this.GENERATE_CARS_BUTTON.addEventListener('click', this.onGenerateButtonClick);
+        this.FEATURES_CONTAINER.addEventListener('click', this.handleFeatureButtons);
     }
 }
 
