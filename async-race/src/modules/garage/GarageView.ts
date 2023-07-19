@@ -171,6 +171,8 @@ class GarageView {
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.START_ENGINE_IDENTIFIER)) {
             this.onStartEngineButtonClick(Number(id));
+            (DOMHelpers.getElement(`.start-${id}`) as HTMLButtonElement).disabled = true;
+            (DOMHelpers.getElement(`.stop-${id}`) as HTMLButtonElement).disabled = false;
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.REMOVE_BUTTON_IDENTIFIER)) {
@@ -216,6 +218,7 @@ class GarageView {
                 [`stop-${car.id}`, 'car-button'],
                 'Stop Engine'
             );
+            (stopCarEngineButton as HTMLButtonElement).disabled = true;
             carSvg.innerHTML = Constants.CAR_SVG;
             const svgPath = carSvg.querySelector('path') as Element;
             svgPath.setAttribute('fill', car.color);

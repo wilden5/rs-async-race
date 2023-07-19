@@ -159,6 +159,21 @@ class GarageModel {
         return 0;
     }
 
+    public stopCarEngine(id: number): Promise<void> {
+        return new Promise<void>((resolve, reject) => {
+            fetch(`${Constants.ENGINE_URL}?id=${id}&status=stopped`, {
+                method: 'PATCH',
+            }).then((response) => {
+                if (response.ok) {
+                    console.log(`Car with id-${id} successfully stopped`);
+                    resolve();
+                } else {
+                    reject(new Error());
+                }
+            });
+        });
+    }
+
     public switchSpecificCarEngineToDrive(id: number): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             fetch(`${Constants.ENGINE_URL}?id=${id}&status=drive`, {
@@ -176,7 +191,7 @@ class GarageModel {
 
     public async animateSpecificCar(id: number): Promise<void> {
         const time = await this.fetchSpecificCarEngineTime(id);
-        const distanceInViewPort: number = document.documentElement.clientWidth * 0.75;
+        const distanceInViewPort: number = document.documentElement.clientWidth * 0.75; // 0.75 is where traffic-light placed
         const carToAnimate: HTMLElement = DOMHelpers.getElement(`.car-${id}`);
 
         let startTime: number;

@@ -17,6 +17,8 @@ class Constants {
 
     static ENGINE_START = 'started';
 
+    static ENGINE_STOP = 'stopped';
+
     static STOP_ENGINE_IDENTIFIER = 'stop';
 
     static DEFAULT_COLOR_PICKER = '#000000';
