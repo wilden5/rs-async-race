@@ -64,7 +64,7 @@ class GarageView {
 
     public onRaceButtonClick: () => void = () => {};
 
-    public onStopEngineButtonClick: (id: number, action: string) => void = () => {};
+    public onStopEngineButtonClick: (id: number, action: string) => Promise<void> = async () => {};
 
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
@@ -209,8 +209,15 @@ class GarageView {
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.STOP_ENGINE_IDENTIFIER)) {
-            this.onStopEngineButtonClick(Number(id), Constants.ENGINE_STOP);
-            (DOMHelpers.getElement(`.stop-${id}`) as HTMLButtonElement).disabled = true;
+            this.onStopEngineButtonClick(Number(id), Constants.ENGINE_STOP)
+                .then(() => {
+                    (DOMHelpers.getElement(`.stop-${id}`) as HTMLButtonElement).disabled = true;
+                    (DOMHelpers.getElement(`.start-${id}`) as HTMLButtonElement).disabled = false;
+                })
+                .then(() => {
+                    const carToAnimate: HTMLElement = DOMHelpers.getElement(`.car-${id}`);
+                    carToAnimate.style.transform = 'none';
+                });
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.REMOVE_BUTTON_IDENTIFIER)) {

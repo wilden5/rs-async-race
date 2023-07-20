@@ -151,7 +151,10 @@ class GarageModel {
             method: 'PATCH',
         });
 
+        delete this.ENGINES_STATUSES[id];
+
         if (response.ok) {
+            console.log(this.ENGINES_STATUSES);
             const data = await response.json();
             const time = data.distance / data.velocity;
             console.log(`Time is ${time}ms`);
