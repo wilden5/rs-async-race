@@ -167,9 +167,13 @@ class GarageModel {
         return 0;
     }
 
-    public async switchSpecificCarEngineToDrive(id: number): Promise<void> {
+    public async switchSpecificCarEngineToDrive(id: number, signal: AbortSignal): Promise<void> {
+        const controller = new AbortController();
+        signal.addEventListener('abort', () => controller.abort());
+
         const response = await fetch(`${Constants.ENGINE_URL}?id=${id}&status=drive`, {
             method: 'PATCH',
+            signal: controller.signal,
         });
 
         if (response.ok) {
@@ -187,6 +191,8 @@ class GarageModel {
         let startTime: number;
         let currentPosition: number;
         let animationFrameId: number | null = null;
+        const abortController = new AbortController();
+        const { signal } = abortController;
 
         const step = (timestamp: number): void => {
             if (!startTime) {
@@ -202,13 +208,14 @@ class GarageModel {
                 if (this.ENGINES_STATUSES[id]) {
                     carToAnimate.style.transform = 'none';
                     cancelAnimationFrame(animationFrameId);
+                    abortController.abort();
                 }
             }
         };
         animationFrameId = requestAnimationFrame(step);
 
         try {
-            await this.switchSpecificCarEngineToDrive(id);
+            await this.switchSpecificCarEngineToDrive(id, signal);
         } catch (error) {
             cancelAnimationFrame(animationFrameId);
             console.log(error);
