@@ -62,7 +62,7 @@ class GarageView {
 
     public onStartEngineButtonClick: (id: number) => void = () => {};
 
-    public onRaceButtonClick: () => void = () => {};
+    public onRaceButtonClick: () => Promise<void> = async () => {};
 
     public onStopEngineButtonClick: (id: number, action: string) => Promise<void> = async () => {};
 
@@ -176,6 +176,13 @@ class GarageView {
         }
     };
 
+    private setButtonsStatus(elementList: HTMLElement[], status: boolean): void {
+        elementList.forEach((item) => {
+            const buttonItem = item as HTMLButtonElement;
+            buttonItem.disabled = status;
+        });
+    }
+
     private handleFeatureButtons = (event: Event): void => {
         const { target } = event;
 
@@ -184,8 +191,12 @@ class GarageView {
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.START_RACE_IDENTIFIER)) {
+            this.setButtonsStatus(DOMHelpers.getElements('.start-button'), true);
+            this.setButtonsStatus(DOMHelpers.getElements('.stop-button'), false);
             (this.RACE_BUTTON as HTMLButtonElement).disabled = true;
-            this.onRaceButtonClick();
+            this.onRaceButtonClick().then(() => {
+                (this.RESET_RACE_BUTTON as HTMLButtonElement).disabled = false;
+            });
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.GENERATE_CARS_IDENTIFIER)) {
@@ -255,12 +266,12 @@ class GarageView {
             );
             const startCarEngineButton = DOMHelpers.createElement(
                 'button',
-                [`start-${car.id}`, 'car-button'],
+                [`start-${car.id}`, 'start-button', 'car-button'],
                 'Start Engine'
             );
             const stopCarEngineButton = DOMHelpers.createElement(
                 'button',
-                [`stop-${car.id}`, 'car-button'],
+                [`stop-${car.id}`, 'stop-button', 'car-button'],
                 'Stop Engine'
             );
             (stopCarEngineButton as HTMLButtonElement).disabled = true;
