@@ -22,6 +22,7 @@ class GarageController {
         this.GARAGE_VIEW.onStartEngineButtonClick = this.handleSpecificCarAnimation;
         this.GARAGE_VIEW.onRaceButtonClick = this.handlerCarRace;
         this.GARAGE_VIEW.onStopEngineButtonClick = this.handleCarEngineStop;
+        this.GARAGE_VIEW.onResetButtonClick = this.handleResetRace;
     }
 
     private handleAddNewCar = async (name: string, color: string): Promise<void> => {
@@ -111,6 +112,10 @@ class GarageController {
 
     private handlerCarRace = async (): Promise<void> => {
         await this.GARAGE_MODEL.startRaceOnSpecificPage();
+    };
+
+    private handleResetRace = async (): Promise<void> => {
+        await this.GARAGE_MODEL.returnRaceCarsToStartPosition();
     };
 
     public async init(): Promise<void> {

@@ -225,13 +225,25 @@ class GarageModel {
         }
     }
 
-    public async startRaceOnSpecificPage(): Promise<void> {
+    public getAllCarsFromSpecificPage(): string[] {
         const carIds: string[] = [];
         DOMHelpers.getElements('.car-wrapper').forEach((item) => {
             carIds.push(item.classList[0].split('-')[1]);
         });
+        return carIds;
+    }
+
+    public async startRaceOnSpecificPage(): Promise<void> {
+        const carIds = this.getAllCarsFromSpecificPage();
         const animationPromises = carIds.map((id) => this.animateSpecificCar(Number(id)));
         await Promise.all(animationPromises);
+    }
+
+    public async returnRaceCarsToStartPosition(): Promise<void> {
+        const carIds = this.getAllCarsFromSpecificPage();
+        carIds.forEach((id) => {
+            this.useSpecificCarEngine(Number(id), Constants.ENGINE_STOP);
+        });
     }
 
     public async init(): Promise<void> {

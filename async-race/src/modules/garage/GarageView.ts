@@ -66,6 +66,8 @@ class GarageView {
 
     public onStopEngineButtonClick: (id: number, action: string) => Promise<void> = async () => {};
 
+    public onResetButtonClick: () => Promise<void> = async () => {};
+
     constructor(commonView: CommonView) {
         this.COMMON_VIEW = commonView;
         this.GARAGE_TITLE = DOMHelpers.createElement('div', ['garage-title'], 'Garage');
@@ -199,8 +201,32 @@ class GarageView {
             });
         }
 
-        if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.GENERATE_CARS_IDENTIFIER)) {
-            this.onGenerateButtonClick();
+        if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.RESET_RACE_IDENTIFIER)) {
+            (this.RESET_RACE_BUTTON as HTMLButtonElement).disabled = true;
+            const carIds: string[] = [];
+            this.onResetButtonClick()
+                .then(() => {
+                    DOMHelpers.getElements('.car-wrapper').forEach((item) => {
+                        carIds.push(item.classList[0].split('-')[1]);
+                    });
+                })
+                .then(() => {
+                    const promises = carIds.map((carId) => {
+                        return this.onStopEngineButtonClick(Number(carId), Constants.ENGINE_STOP)
+                            .then(() => {
+                                (DOMHelpers.getElement(`.stop-${carId}`) as HTMLButtonElement).disabled = true;
+                                (DOMHelpers.getElement(`.start-${carId}`) as HTMLButtonElement).disabled = false;
+                            })
+                            .then(() => {
+                                const carToAnimate: HTMLElement = DOMHelpers.getElement(`.car-${carId}`);
+                                carToAnimate.style.transform = 'none';
+                            });
+                    });
+                    return Promise.all(promises);
+                })
+                .then(() => {
+                    (this.RACE_BUTTON as HTMLButtonElement).disabled = false;
+                });
         }
     };
 
