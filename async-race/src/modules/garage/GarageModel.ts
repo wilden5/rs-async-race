@@ -1,5 +1,5 @@
 import Constants from '../../utils/Constants';
-import { CarEntity, EngineStatus } from '../../types/Interfaces';
+import { CarEntity, EngineStatus, RaceResult } from '../../types/Interfaces';
 import DOMHelpers from '../../utils/DOMHelpers';
 
 class GarageModel {
@@ -186,7 +186,7 @@ class GarageModel {
         }
     }
 
-    public async animateSpecificCar(id: number): Promise<void> {
+    public async animateSpecificCar(id: number): Promise<RaceResult> {
         const engineTime = await this.useSpecificCarEngine(id, Constants.ENGINE_START);
         const distanceInViewPort: number = document.documentElement.clientWidth * 0.75; // 0.75 is where traffic-light placed
         const carToAnimate: HTMLElement = DOMHelpers.getElement(`.car-${id}`);
@@ -219,9 +219,11 @@ class GarageModel {
 
         try {
             await this.switchSpecificCarEngineToDrive(id, signal);
+            return { carId: id, time: engineTime, success: true };
         } catch (error) {
             cancelAnimationFrame(animationFrameId);
             console.log(error);
+            return { carId: id, time: engineTime, success: false };
         }
     }
 
@@ -236,7 +238,16 @@ class GarageModel {
     public async startRaceOnSpecificPage(): Promise<void> {
         const carIds = this.getAllCarsFromSpecificPage();
         const animationPromises = carIds.map((id) => this.animateSpecificCar(Number(id)));
-        await Promise.all(animationPromises);
+        const raceData: RaceResult[] = await Promise.all(animationPromises);
+        const raceFinishers = raceData.filter((result) => result.success);
+
+        if (raceFinishers.length > 0) {
+            raceFinishers.sort((a, b) => a.time - b.time);
+            const winner = raceFinishers[0].carId;
+            DOMHelpers.getElement('.winner-name').innerText = DOMHelpers.getElement(`.name-${winner}`).innerText;
+        } else {
+            console.log(Constants.NO_ONE_FINISHED_RACE);
+        }
     }
 
     public async returnRaceCarsToStartPosition(): Promise<void> {

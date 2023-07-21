@@ -46,6 +46,10 @@ class GarageView {
 
     public RESET_RACE_BUTTON: HTMLElement;
 
+    public RACE_WINNER_CONTAINER: HTMLElement;
+
+    public WINNER_NAME: HTMLElement;
+
     public onCreateCarButtonClick: (name: string, color: string) => void = () => {};
 
     public onDeleteButtonClick: (id: number) => void = () => {};
@@ -90,9 +94,17 @@ class GarageView {
         this.GENERATE_CARS_BUTTON = DOMHelpers.createElement('button', ['gen-cars-button', 'button'], 'Generate Cars');
         this.RACE_BUTTON = DOMHelpers.createElement('button', ['race-button', 'button'], 'Race');
         this.RESET_RACE_BUTTON = DOMHelpers.createElement('button', ['reset-button', 'button'], 'Reset');
+        this.RACE_WINNER_CONTAINER = DOMHelpers.createElement(
+            'div',
+            ['race-winner-container'],
+            'WINNER IN THE LAST RACE:'
+        );
+        this.WINNER_NAME = DOMHelpers.createElement('span', ['winner-name']);
     }
 
     private appendElements(): void {
+        DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.RACE_WINNER_CONTAINER);
+        DOMHelpers.appendChildToElement(this.RACE_WINNER_CONTAINER, this.WINNER_NAME);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.GARAGE_TITLE);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.GARAGE_PAGE_CONTAINER);
         DOMHelpers.appendChildToElement(this.GARAGE_PAGE_CONTAINER, this.GARAGE_PAGE);
@@ -227,6 +239,10 @@ class GarageView {
                 .then(() => {
                     (this.RACE_BUTTON as HTMLButtonElement).disabled = false;
                 });
+        }
+
+        if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.GENERATE_CARS_IDENTIFIER)) {
+            this.onGenerateButtonClick();
         }
     };
 

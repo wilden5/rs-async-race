@@ -7,3 +7,9 @@ export interface CarEntity {
 export interface EngineStatus {
     [id: number]: boolean;
 }
+
+export interface RaceResult {
+    carId: number;
+    time: number;
+    success: boolean;
+}
