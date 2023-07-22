@@ -13,3 +13,9 @@ export interface RaceResult {
     time: number;
     success: boolean;
 }
+
+export interface WinnerData {
+    id: number;
+    wins: number;
+    time: number;
+}

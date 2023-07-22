@@ -1,6 +1,7 @@
 import Constants from '../../utils/Constants';
 import { CarEntity, EngineStatus, RaceResult } from '../../types/Interfaces';
 import DOMHelpers from '../../utils/DOMHelpers';
+import WinnersModel from '../winners/WinnersModel';
 
 class GarageModel {
     private NUMBER_CARS_IN_GARAGE: number;
@@ -13,11 +14,14 @@ class GarageModel {
 
     private ENGINES_STATUSES: EngineStatus = {};
 
+    private WINNERS_MODEL: WinnersModel;
+
     constructor() {
         this.NUMBER_CARS_IN_GARAGE = 0;
         this.CURRENT_GARAGE_PAGE = 1;
         this.CARS_PER_GARAGE_PAGE = 7;
         this.TOTAL_CARS_IN_GARAGE = [];
+        this.WINNERS_MODEL = new WinnersModel();
     }
 
     public async fetchNumberOfCarsFromDB(): Promise<void> {
@@ -243,8 +247,9 @@ class GarageModel {
 
         if (raceFinishers.length > 0) {
             raceFinishers.sort((a, b) => a.time - b.time);
-            const winner = raceFinishers[0].carId;
-            DOMHelpers.getElement('.winner-name').innerText = DOMHelpers.getElement(`.name-${winner}`).innerText;
+            const winner = raceFinishers[0];
+            DOMHelpers.getElement('.winner-name').innerText = DOMHelpers.getElement(`.name-${winner.carId}`).innerText;
+            await this.WINNERS_MODEL.createWinner(winner.carId, 1, winner.time);
         } else {
             console.log(Constants.NO_ONE_FINISHED_RACE);
         }
