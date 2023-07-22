@@ -1,3 +1,10 @@
+.garage-buttons-wrapper {
+
+  &.disabled {
+    display: none;
+  }
+}
+
 .garage-button {
   margin-right: 1rem;
 }

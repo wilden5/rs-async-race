@@ -48,14 +48,16 @@ class CommonView {
         DOMHelpers.appendChildToElement(this.FOOTER_SCHOOL, this.FOOTER_SCHOOL_IMG);
     }
 
-    private handleGarageButtonClick = (): void => {
+    private handleToGarageButtonClick = (): void => {
         this.WINNERS_CONTAINER.classList.add('disabled');
         this.GARAGE_CONTAINER.classList.remove('disabled');
+        DOMHelpers.getElement('.garage-buttons-wrapper').classList.remove('disabled');
     };
 
-    private handleWinnersButtonClick = (): void => {
+    private handleToWinnersButtonClick = (): void => {
         this.GARAGE_CONTAINER.classList.add('disabled');
         this.WINNERS_CONTAINER.classList.remove('disabled');
+        DOMHelpers.getElement('.garage-buttons-wrapper').classList.add('disabled');
     };
 
     private setFooterLinks = (): void => {
@@ -72,8 +74,8 @@ class CommonView {
     public setupDOMElementsAndEventHandlers(): void {
         this.appendElements();
         this.setFooterLinks();
-        this.GARAGE_BUTTON.addEventListener('click', this.handleGarageButtonClick);
-        this.WINNERS_BUTTON.addEventListener('click', this.handleWinnersButtonClick);
+        this.GARAGE_BUTTON.addEventListener('click', this.handleToGarageButtonClick);
+        this.WINNERS_BUTTON.addEventListener('click', this.handleToWinnersButtonClick);
     }
 }
 

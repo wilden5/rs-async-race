@@ -12,6 +12,8 @@ class GarageView {
 
     public GARAGE_PAGE: HTMLElement;
 
+    private GARAGE_BUTTONS_WRAPPER: HTMLElement;
+
     public CREATE_CONTAINER: HTMLElement;
 
     public CREATE_CAR_INPUT: HTMLElement;
@@ -77,6 +79,7 @@ class GarageView {
         this.GARAGE_TITLE = DOMHelpers.createElement('div', ['garage-title'], 'Garage');
         this.GARAGE_PAGE_CONTAINER = DOMHelpers.createElement('div', ['garage-page-container']);
         this.GARAGE_PAGE = DOMHelpers.createElement('div', ['garage-page'], 'Page #1');
+        this.GARAGE_BUTTONS_WRAPPER = DOMHelpers.createElement('div', ['garage-buttons-wrapper']);
         this.CREATE_CONTAINER = DOMHelpers.createElement('div', ['create-container']);
         this.CREATE_CAR_INPUT = DOMHelpers.createElement('input', ['create-car']);
         this.SET_CAR_COLOR = DOMHelpers.createElement('input', ['create-color']);
@@ -112,10 +115,11 @@ class GarageView {
         DOMHelpers.appendChildToElement(this.GARAGE_PAGE_CONTAINER, this.PAGINATION_NEXT_BUTTON);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.CARS_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.PAGINATION_CONTAINER);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.CREATE_CONTAINER);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.UPDATE_CONTAINER);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.FEATURES_CONTAINER);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.ID_HOLDER);
+        DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.GARAGE_BUTTONS_WRAPPER);
+        DOMHelpers.appendChildToElement(this.GARAGE_BUTTONS_WRAPPER, this.CREATE_CONTAINER);
+        DOMHelpers.appendChildToElement(this.GARAGE_BUTTONS_WRAPPER, this.UPDATE_CONTAINER);
+        DOMHelpers.appendChildToElement(this.GARAGE_BUTTONS_WRAPPER, this.FEATURES_CONTAINER);
+        DOMHelpers.appendChildToElement(this.GARAGE_BUTTONS_WRAPPER, this.ID_HOLDER);
         DOMHelpers.appendChildToElement(this.CREATE_CONTAINER, this.CREATE_CAR_INPUT);
         DOMHelpers.appendChildToElement(this.CREATE_CONTAINER, this.SET_CAR_COLOR);
         DOMHelpers.appendChildToElement(this.CREATE_CONTAINER, this.CREATE_CAR_BUTTON);
