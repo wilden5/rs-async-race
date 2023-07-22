@@ -249,7 +249,7 @@ class GarageModel {
             raceFinishers.sort((a, b) => a.time - b.time);
             const winner = raceFinishers[0];
             DOMHelpers.getElement('.winner-name').innerText = DOMHelpers.getElement(`.name-${winner.carId}`).innerText;
-            await this.WINNERS_MODEL.createWinner(winner.carId, 1, winner.time);
+            await this.WINNERS_MODEL.handleWinner(winner.carId, winner.time);
         } else {
             console.log(Constants.NO_ONE_FINISHED_RACE);
         }
