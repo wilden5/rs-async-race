@@ -1,3 +1,21 @@
+.navigation-panel-container {
+  margin-bottom: 3rem;
+}
+
+.garage-container {
+
+  &.disabled {
+    display: none;
+  }
+}
+
+.winners-container {
+
+  &.disabled {
+    display: none;
+  }
+}
+
 .garage-buttons-wrapper {
 
   &.disabled {

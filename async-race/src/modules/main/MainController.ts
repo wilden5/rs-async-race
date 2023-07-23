@@ -1,14 +1,14 @@
-import GarageModel from './GarageModel';
-import GarageView from './GarageView';
+import MainModel from './MainModel';
+import MainView from './MainView';
 import { CarEntity } from '../../types/Interfaces';
 import DOMHelpers from '../../utils/DOMHelpers';
 
-class GarageController {
-    private GARAGE_MODEL: GarageModel;
+class MainController {
+    private GARAGE_MODEL: MainModel;
 
-    private readonly GARAGE_VIEW: GarageView;
+    private readonly GARAGE_VIEW: MainView;
 
-    constructor(model: GarageModel, view: GarageView) {
+    constructor(model: MainModel, view: MainView) {
         this.GARAGE_MODEL = model;
         this.GARAGE_VIEW = view;
 
@@ -171,4 +171,4 @@ class GarageController {
     }
 }
 
-export default GarageController;
+export default MainController;

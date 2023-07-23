@@ -2,7 +2,7 @@ import Constants from '../../utils/Constants';
 import { CarEntity, EngineStatus, RaceResult, WinnerData } from '../../types/Interfaces';
 import DOMHelpers from '../../utils/DOMHelpers';
 
-class GarageModel {
+class MainModel {
     private NUMBER_CARS_IN_GARAGE: number;
 
     private numberOfWinners: number;
@@ -358,4 +358,4 @@ class GarageModel {
     }
 }
 
-export default GarageModel;
+export default MainModel;

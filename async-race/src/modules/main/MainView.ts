@@ -1,18 +1,27 @@
 import DOMHelpers from '../../utils/DOMHelpers';
-import CommonView from '../common/CommonView';
 import { CarEntity } from '../../types/Interfaces';
 import Constants from '../../utils/Constants';
 
-class GarageView {
-    private COMMON_VIEW: CommonView;
+class MainView {
+    public WRAPPER: HTMLElement;
+
+    public NAVIGATION_CONTAINER: HTMLElement;
+
+    public GARAGE_BUTTON: HTMLElement;
+
+    public WINNERS_BUTTON: HTMLElement;
+
+    public GARAGE_CONTAINER: HTMLElement;
+
+    public WINNERS_CONTAINER: HTMLElement;
 
     public GARAGE_TITLE: HTMLElement;
 
-    private GARAGE_PAGE_CONTAINER: HTMLElement;
+    public GARAGE_PAGE_CONTAINER: HTMLElement;
 
     public GARAGE_PAGE: HTMLElement;
 
-    private GARAGE_BUTTONS_WRAPPER: HTMLElement;
+    public GARAGE_BUTTONS_WRAPPER: HTMLElement;
 
     public CREATE_CONTAINER: HTMLElement;
 
@@ -94,8 +103,13 @@ class GarageView {
 
     public onResetButtonClick: () => Promise<void> = async () => {};
 
-    constructor(commonView: CommonView) {
-        this.COMMON_VIEW = commonView;
+    constructor() {
+        this.WRAPPER = DOMHelpers.createElement('div', ['wrapper']);
+        this.NAVIGATION_CONTAINER = DOMHelpers.createElement('div', ['navigation-panel-container']);
+        this.GARAGE_BUTTON = DOMHelpers.createElement('button', ['garage-button', 'button'], 'Open Garage');
+        this.WINNERS_BUTTON = DOMHelpers.createElement('button', ['winners-button', 'button'], 'Check Winners');
+        this.GARAGE_CONTAINER = DOMHelpers.createElement('div', ['garage-container']);
+        this.WINNERS_CONTAINER = DOMHelpers.createElement('div', ['winners-container', 'disabled']);
         this.GARAGE_TITLE = DOMHelpers.createElement('div', ['garage-title'], 'Garage');
         this.GARAGE_PAGE_CONTAINER = DOMHelpers.createElement('div', ['garage-page-container']);
         this.GARAGE_PAGE = DOMHelpers.createElement('div', ['garage-page'], 'Page #1');
@@ -136,19 +150,25 @@ class GarageView {
     }
 
     private appendElements(): void {
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.RACE_WINNER_CONTAINER);
+        DOMHelpers.appendChildToElement(document.body, this.WRAPPER);
+        DOMHelpers.appendChildToElement(this.WRAPPER, this.NAVIGATION_CONTAINER);
+        DOMHelpers.appendChildToElement(this.NAVIGATION_CONTAINER, this.GARAGE_BUTTON);
+        DOMHelpers.appendChildToElement(this.NAVIGATION_CONTAINER, this.WINNERS_BUTTON);
+        DOMHelpers.appendChildToElement(this.WRAPPER, this.GARAGE_CONTAINER);
+        DOMHelpers.appendChildToElement(this.WRAPPER, this.WINNERS_CONTAINER);
+        DOMHelpers.appendChildToElement(this.GARAGE_CONTAINER, this.RACE_WINNER_CONTAINER);
         DOMHelpers.appendChildToElement(this.RACE_WINNER_CONTAINER, this.WINNER_NAME);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.GARAGE_TITLE);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.GARAGE_PAGE_CONTAINER);
+        DOMHelpers.appendChildToElement(this.GARAGE_CONTAINER, this.GARAGE_TITLE);
+        DOMHelpers.appendChildToElement(this.GARAGE_CONTAINER, this.GARAGE_PAGE_CONTAINER);
         DOMHelpers.appendChildToElement(this.GARAGE_PAGE_CONTAINER, this.GARAGE_PAGE);
         DOMHelpers.appendChildToElement(this.GARAGE_PAGE_CONTAINER, this.PAGINATION_PREV_BUTTON);
         DOMHelpers.appendChildToElement(this.GARAGE_PAGE_CONTAINER, this.PAGINATION_NEXT_BUTTON);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.CARS_CONTAINER);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.PAGINATION_CONTAINER);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.GARAGE_BUTTONS_WRAPPER);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.WINNERS_CONTAINER, this.WINNERS_TITLE);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.WINNERS_CONTAINER, this.WINNERS_PAGE);
-        DOMHelpers.appendChildToElement(this.COMMON_VIEW.WINNERS_CONTAINER, this.TABLE_WRAPPER);
+        DOMHelpers.appendChildToElement(this.GARAGE_CONTAINER, this.CARS_CONTAINER);
+        DOMHelpers.appendChildToElement(this.GARAGE_CONTAINER, this.PAGINATION_CONTAINER);
+        DOMHelpers.appendChildToElement(this.NAVIGATION_CONTAINER, this.GARAGE_BUTTONS_WRAPPER);
+        DOMHelpers.appendChildToElement(this.WINNERS_CONTAINER, this.WINNERS_TITLE);
+        DOMHelpers.appendChildToElement(this.WINNERS_CONTAINER, this.WINNERS_PAGE);
+        DOMHelpers.appendChildToElement(this.WINNERS_CONTAINER, this.TABLE_WRAPPER);
         DOMHelpers.appendChildToElement(this.TABLE_WRAPPER, this.TABLE_ROW_HEADER);
         DOMHelpers.appendChildToElement(this.TABLE_WRAPPER, this.TABLE_ROW_WRAPPER);
         DOMHelpers.appendChildToElement(this.TABLE_ROW_HEADER, this.TABLE_CELL_NUMBER);
@@ -402,6 +422,18 @@ class GarageView {
         DOMHelpers.appendChildToElement(DOMHelpers.getElement('.table-row-wrapper'), row);
     }
 
+    private handleToGarageButtonClick = (): void => {
+        this.WINNERS_CONTAINER.classList.add('disabled');
+        this.GARAGE_CONTAINER.classList.remove('disabled');
+        DOMHelpers.getElement('.garage-buttons-wrapper').classList.remove('disabled');
+    };
+
+    private handleToWinnersButtonClick = (): void => {
+        this.GARAGE_CONTAINER.classList.add('disabled');
+        this.WINNERS_CONTAINER.classList.remove('disabled');
+        DOMHelpers.getElement('.garage-buttons-wrapper').classList.add('disabled');
+    };
+
     public setupDOMElementsAndEventHandlers(): void {
         this.appendElements();
         this.setInputElements();
@@ -412,7 +444,9 @@ class GarageView {
         this.PAGINATION_PREV_BUTTON.addEventListener('click', this.onPrevButtonClick);
         this.PAGINATION_NEXT_BUTTON.addEventListener('click', this.onNextButtonClick);
         this.FEATURES_CONTAINER.addEventListener('click', this.handleFeatureButtons);
+        this.GARAGE_BUTTON.addEventListener('click', this.handleToGarageButtonClick);
+        this.WINNERS_BUTTON.addEventListener('click', this.handleToWinnersButtonClick);
     }
 }
 
-export default GarageView;
+export default MainView;
