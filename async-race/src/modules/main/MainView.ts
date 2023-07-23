@@ -200,6 +200,10 @@ class MainView {
             this.setButtonsStatus(DOMHelpers.getElements('.stop-button'), false);
             this.setButtonsStatus(DOMHelpers.getElements('.select-button'), true);
             this.setButtonsStatus(DOMHelpers.getElements('.remove-button'), true);
+            this.setButtonsStatus(DOMHelpers.getElements('.gen-cars-button'), true);
+            this.setButtonsStatus(DOMHelpers.getElements('.create-button'), true);
+            (this.MAIN_ELEMENTS.PAGINATION_NEXT_BUTTON as HTMLButtonElement).disabled = true;
+            (this.MAIN_ELEMENTS.PAGINATION_PREV_BUTTON as HTMLButtonElement).disabled = true;
             (this.MAIN_ELEMENTS.RACE_BUTTON as HTMLButtonElement).disabled = true;
             ReferenceFunctions.onRaceButtonClick().then(() => {
                 (this.MAIN_ELEMENTS.RESET_RACE_BUTTON as HTMLButtonElement).disabled = false;
@@ -233,6 +237,10 @@ class MainView {
                     (this.MAIN_ELEMENTS.RACE_BUTTON as HTMLButtonElement).disabled = false;
                     this.setButtonsStatus(DOMHelpers.getElements('.select-button'), false);
                     this.setButtonsStatus(DOMHelpers.getElements('.remove-button'), false);
+                    this.setButtonsStatus(DOMHelpers.getElements('.gen-cars-button'), false);
+                    this.setButtonsStatus(DOMHelpers.getElements('.create-button'), false);
+                    (this.MAIN_ELEMENTS.PAGINATION_NEXT_BUTTON as HTMLButtonElement).disabled = false;
+                    (this.MAIN_ELEMENTS.PAGINATION_PREV_BUTTON as HTMLButtonElement).disabled = false;
                 });
         }
 
@@ -335,7 +343,11 @@ class MainView {
         const carImage = DOMHelpers.createElement('div', ['car-image', 'car-cell'], 'none');
         const carName = DOMHelpers.createElement('div', ['car-name', 'car-cell'], name);
         const carWins = DOMHelpers.createElement('div', ['car-wins', 'car-cell'], wins.toString());
-        const carTime = DOMHelpers.createElement('div', ['car-time', 'car-cell'], (time / 1000).toFixed(2).toString());
+        const carTime = DOMHelpers.createElement(
+            'div',
+            ['car-time', 'car-cell'],
+            `${(time / 1000).toFixed(2).toString()}s`
+        );
 
         DOMHelpers.appendChildToElement(row, carNumber);
         DOMHelpers.appendChildToElement(row, carImage);
