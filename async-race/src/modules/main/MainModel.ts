@@ -137,8 +137,8 @@ class MainModel {
         const carPromises: Promise<void>[] = [];
 
         for (let i = 0; i < 100; i += 1) {
-            const carName = this.generateRandomCarName();
-            const carColor = this.generateRandomCarColor();
+            const carName: string = this.generateRandomCarName();
+            const carColor: string = this.generateRandomCarColor();
             const carPromise = this.saveNewCarInDB(carName, carColor);
             carPromises.push(carPromise);
         }
@@ -169,7 +169,7 @@ class MainModel {
         if (response.ok) {
             console.log(this.ENGINES_STATUSES);
             const data = await response.json();
-            const time = data.distance / data.velocity;
+            const time: number = data.distance / data.velocity;
             console.log(`Time is ${time}ms`);
 
             if (action === Constants.ENGINE_STOP) {
@@ -199,7 +199,7 @@ class MainModel {
     }
 
     public async animateSpecificCar(id: number): Promise<RaceResult> {
-        const engineTime = await this.useSpecificCarEngine(id, Constants.ENGINE_START);
+        const engineTime: number = await this.useSpecificCarEngine(id, Constants.ENGINE_START);
         const distanceInViewPort: number = document.documentElement.clientWidth * 0.75; // 0.75 is where traffic-light placed
         const carToAnimate: HTMLElement = DOMHelpers.getElement(`.car-${id}`);
 
@@ -248,14 +248,14 @@ class MainModel {
     }
 
     public async startRaceOnSpecificPage(onRaceFinish: (carId: number, time: number) => void): Promise<void> {
-        const carIds = this.getAllCarsFromSpecificPage();
+        const carIds: string[] = this.getAllCarsFromSpecificPage();
         const animationPromises = carIds.map((id) => this.animateSpecificCar(Number(id)));
         const raceData: RaceResult[] = await Promise.all(animationPromises);
-        const raceFinishers = raceData.filter((result) => result.success);
+        const raceFinishers: RaceResult[] = raceData.filter((result) => result.success);
 
         if (raceFinishers.length > 0) {
             raceFinishers.sort((a, b) => a.time - b.time);
-            const winner = raceFinishers[0];
+            const winner: RaceResult = raceFinishers[0];
             DOMHelpers.getElement('.winner-name').innerText = DOMHelpers.getElement(`.name-${winner.carId}`).innerText;
             onRaceFinish(winner.carId, winner.time);
         } else {
@@ -264,7 +264,7 @@ class MainModel {
     }
 
     public async returnRaceCarsToStartPosition(): Promise<void> {
-        const carIds = this.getAllCarsFromSpecificPage();
+        const carIds: string[] = this.getAllCarsFromSpecificPage();
         carIds.forEach((id) => {
             this.useSpecificCarEngine(Number(id), Constants.ENGINE_STOP);
         });
@@ -344,7 +344,7 @@ class MainModel {
 
     public async deleteInitialWinnerRecordInDB(id: number): Promise<void> {
         if (!localStorage.getItem('initial-winner')) {
-            const car = await this.getSpecificWinner(id);
+            const car: WinnerData | null = await this.getSpecificWinner(id);
             if (car?.time === 10) {
                 await this.deleteSpecificWinner(id);
                 localStorage.setItem('initial-winner', 'deleted');

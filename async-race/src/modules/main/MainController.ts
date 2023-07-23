@@ -1,6 +1,6 @@
 import MainModel from './MainModel';
 import MainView from './MainView';
-import { CarEntity } from '../../types/Interfaces';
+import { CarEntity, WinnerData } from '../../types/Interfaces';
 import DOMHelpers from '../../utils/DOMHelpers';
 import ReferenceFunctions from '../../utils/ReferenceFunctions';
 
@@ -67,20 +67,20 @@ class MainController {
     };
 
     public limitCarsPerGaragePage(page: number): void {
-        const totalCars = this.GARAGE_MODEL.getTotalCarsInGarage();
-        const carsPerPage = this.GARAGE_MODEL.getCarsPerGaragePage();
-        const startIndex = (page - 1) * carsPerPage;
-        const endIndex = page * carsPerPage;
-        const carsForPage = totalCars.slice(startIndex, endIndex);
+        const totalCars: CarEntity[] = this.GARAGE_MODEL.getTotalCarsInGarage();
+        const carsPerPage: number = this.GARAGE_MODEL.getCarsPerGaragePage();
+        const startIndex: number = (page - 1) * carsPerPage;
+        const endIndex: number = page * carsPerPage;
+        const carsForPage: CarEntity[] = totalCars.slice(startIndex, endIndex);
 
         this.GARAGE_VIEW.renderCarsInGarage(carsForPage);
         this.updatePaginationButtons(page);
     }
 
     private updatePaginationButtons(currentPage: number): void {
-        const totalCars = this.GARAGE_MODEL.getTotalCarsInGarage();
-        const carsPerPage = this.GARAGE_MODEL.getCarsPerGaragePage();
-        const totalPages = Math.ceil(totalCars.length / carsPerPage);
+        const totalCars: CarEntity[] = this.GARAGE_MODEL.getTotalCarsInGarage();
+        const carsPerPage: number = this.GARAGE_MODEL.getCarsPerGaragePage();
+        const totalPages: number = Math.ceil(totalCars.length / carsPerPage);
 
         (this.GARAGE_VIEW.MAIN_ELEMENTS.PAGINATION_PREV_BUTTON as HTMLButtonElement).disabled = currentPage === 1;
         (this.GARAGE_VIEW.MAIN_ELEMENTS.PAGINATION_NEXT_BUTTON as HTMLButtonElement).disabled =
@@ -88,7 +88,7 @@ class MainController {
     }
 
     private handlePrevGaragePage = (): void => {
-        const currentPage = this.GARAGE_MODEL.getCurrentGaragePage();
+        const currentPage: number = this.GARAGE_MODEL.getCurrentGaragePage();
         if (currentPage > 1) {
             this.GARAGE_MODEL.setCurrentGaragePage(currentPage - 1);
             this.GARAGE_VIEW.updateGaragePageNumber(currentPage - 1);
@@ -97,10 +97,10 @@ class MainController {
     };
 
     private handleNextGaragePage = (): void => {
-        const totalCars = this.GARAGE_MODEL.getTotalCarsInGarage();
-        const currentPage = this.GARAGE_MODEL.getCurrentGaragePage();
-        const carsPerPage = this.GARAGE_MODEL.getCarsPerGaragePage();
-        const totalPages = Math.ceil(totalCars.length / carsPerPage);
+        const totalCars: CarEntity[] = this.GARAGE_MODEL.getTotalCarsInGarage();
+        const currentPage: number = this.GARAGE_MODEL.getCurrentGaragePage();
+        const carsPerPage: number = this.GARAGE_MODEL.getCarsPerGaragePage();
+        const totalPages: number = Math.ceil(totalCars.length / carsPerPage);
 
         if (currentPage < totalPages) {
             this.GARAGE_MODEL.setCurrentGaragePage(currentPage + 1);
@@ -127,7 +127,7 @@ class MainController {
     };
 
     private handleWinner = async (id: number, lastTime: number): Promise<void> => {
-        const winner = await this.GARAGE_MODEL.getSpecificWinner(id);
+        const winner: WinnerData | null = await this.GARAGE_MODEL.getSpecificWinner(id);
         if (winner) {
             if (lastTime < winner.time) {
                 console.log(`last time ${lastTime} prev-db-time ${winner.time}`);
@@ -146,8 +146,8 @@ class MainController {
     public async populateWinnersTable(): Promise<void> {
         DOMHelpers.getElement('.table-row-wrapper').innerHTML = '';
         let rowNumber = 1;
-        const allWinners = await this.GARAGE_MODEL.getWinners();
-        const allCars = await Promise.all(
+        const allWinners: WinnerData[] = await this.GARAGE_MODEL.getWinners();
+        const allCars: CarEntity[] = await Promise.all(
             allWinners.map((item) => this.GARAGE_MODEL.fetchSpecificCarDataFromDB(item.id))
         );
 
