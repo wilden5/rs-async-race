@@ -199,3 +199,38 @@
   padding: 1rem;
   font-size: 2rem;
 }
+
+.table-wins,
+.table-time {
+  position: relative;
+  padding-right: 1.5rem;
+
+  &.triggered {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 10%;
+      width: 0;
+      height: 0;
+      border-left: 0.5rem solid transparent;
+      border-right: 0.5rem solid transparent;
+      border-top: 0.5rem solid red;
+      transform: translateY(-50%);
+    }
+
+    &.asc::after {
+      border-top: none;
+      border-left: 0.5rem solid transparent;
+      border-right: 0.5rem solid transparent;
+      border-bottom: 0.5rem solid red;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .car-cell,
+  .header-cell{
+    font-size: 1rem;
+  }
+}

@@ -25,6 +25,8 @@ class MainController {
         ReferenceFunctions.onRaceButtonClick = this.handlerCarRace;
         ReferenceFunctions.onStopEngineButtonClick = this.handleCarEngineStop;
         ReferenceFunctions.onResetButtonClick = this.handleResetRace;
+        ReferenceFunctions.onWinsColumnClick = this.handleSortByWins;
+        ReferenceFunctions.onBestTimeColumnClick = this.handleSortByBestTime;
     }
 
     private handleAddNewCar = async (name: string, color: string): Promise<void> => {
@@ -143,10 +145,10 @@ class MainController {
         this.GARAGE_VIEW.updateWinnersTitle(this.GARAGE_MODEL.getNumberOfWinners());
     };
 
-    public async populateWinnersTable(): Promise<void> {
+    public async populateWinnersTable(sortType?: string): Promise<void> {
         DOMHelpers.getElement('.table-row-wrapper').innerHTML = '';
         let rowNumber = 1;
-        const allWinners: WinnerData[] = await this.GARAGE_MODEL.getWinners();
+        const allWinners: WinnerData[] = await this.GARAGE_MODEL.getWinners(sortType);
         const allCars: CarEntity[] = await Promise.all(
             allWinners.map((item) => this.GARAGE_MODEL.fetchSpecificCarDataFromDB(item.id))
         );
@@ -161,6 +163,31 @@ class MainController {
             rowNumber += 1;
         });
     }
+
+    public handleSortByWins = async (): Promise<void> => {
+        const winsColumn: HTMLElement = DOMHelpers.getElement('.table-wins');
+        winsColumn.classList.add('triggered');
+        if (winsColumn.classList.contains('asc')) {
+            winsColumn.classList.toggle('asc');
+            await this.populateWinnersTable('wins-desc');
+        } else {
+            winsColumn.classList.toggle('asc');
+            await this.populateWinnersTable('wins-asc');
+        }
+    };
+
+    public handleSortByBestTime = async (): Promise<void> => {
+        await this.populateWinnersTable('time-asc');
+        const timeColumn: HTMLElement = DOMHelpers.getElement('.table-time');
+        timeColumn.classList.add('triggered');
+        if (timeColumn.classList.contains('asc')) {
+            timeColumn.classList.toggle('asc');
+            await this.populateWinnersTable('time-asc');
+        } else {
+            timeColumn.classList.toggle('asc');
+            await this.populateWinnersTable('time-desc');
+        }
+    };
 
     public async init(): Promise<void> {
         this.GARAGE_VIEW.setupDOMElementsAndEventHandlers();

@@ -22,6 +22,10 @@ class ReferenceFunctions {
     static onStopEngineButtonClick: (id: number, action: string) => Promise<void> = async () => {};
 
     static onResetButtonClick: () => Promise<void> = async () => {};
+
+    static onWinsColumnClick: () => Promise<void> = async () => {};
+
+    static onBestTimeColumnClick: () => Promise<void> = async () => {};
 }
 
 export default ReferenceFunctions;

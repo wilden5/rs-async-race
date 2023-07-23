@@ -311,7 +311,27 @@ class MainModel {
         }
     }
 
-    public async getWinners(): Promise<WinnerData[]> {
+    public async getWinners(sortType?: string): Promise<WinnerData[]> {
+        if (sortType === 'wins-desc') {
+            const response = await fetch(`${Constants.WINNERS_URL}?_sort=wins&_order=desc`);
+            return response.json();
+        }
+
+        if (sortType === 'time-asc') {
+            const response = await fetch(`${Constants.WINNERS_URL}?_sort=time&_order=asc`);
+            return response.json();
+        }
+
+        if (sortType === 'wins-asc') {
+            const response = await fetch(`${Constants.WINNERS_URL}?_sort=wins&_order=asc`);
+            return response.json();
+        }
+
+        if (sortType === 'time-desc') {
+            const response = await fetch(`${Constants.WINNERS_URL}?_sort=time&_order=desc`);
+            return response.json();
+        }
+
         const response = await fetch(Constants.WINNERS_URL);
         return response.json();
     }

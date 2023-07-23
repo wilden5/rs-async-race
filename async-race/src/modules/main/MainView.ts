@@ -381,6 +381,9 @@ class MainView {
         this.MAIN_ELEMENTS.FEATURES_CONTAINER.addEventListener('click', this.handleFeatureButtons);
         this.MAIN_ELEMENTS.GARAGE_BUTTON.addEventListener('click', this.handleToGarageButtonClick);
         this.MAIN_ELEMENTS.WINNERS_BUTTON.addEventListener('click', this.handleToWinnersButtonClick);
+        this.MAIN_ELEMENTS.WINNERS_BUTTON.addEventListener('click', this.handleToWinnersButtonClick);
+        this.MAIN_ELEMENTS.TABLE_CELL_WINS.addEventListener('click', ReferenceFunctions.onWinsColumnClick);
+        this.MAIN_ELEMENTS.TABLE_CELL_BEST_TIME.addEventListener('click', ReferenceFunctions.onBestTimeColumnClick);
     }
 }
 
