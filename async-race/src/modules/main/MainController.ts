@@ -81,8 +81,9 @@ class MainController {
         const carsPerPage = this.GARAGE_MODEL.getCarsPerGaragePage();
         const totalPages = Math.ceil(totalCars.length / carsPerPage);
 
-        (this.GARAGE_VIEW.PAGINATION_PREV_BUTTON as HTMLButtonElement).disabled = currentPage === 1;
-        (this.GARAGE_VIEW.PAGINATION_NEXT_BUTTON as HTMLButtonElement).disabled = currentPage === totalPages;
+        (this.GARAGE_VIEW.MAIN_ELEMENTS.PAGINATION_PREV_BUTTON as HTMLButtonElement).disabled = currentPage === 1;
+        (this.GARAGE_VIEW.MAIN_ELEMENTS.PAGINATION_NEXT_BUTTON as HTMLButtonElement).disabled =
+            currentPage === totalPages;
     }
 
     private handlePrevGaragePage = (): void => {
