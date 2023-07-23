@@ -1,3 +1,19 @@
+.button,
+.car-button {
+  transition: ease-in-out 0.3s;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    transform: scale(1);
+  }
+}
+
 .navigation-panel-container {
   margin-bottom: 3rem;
 }
@@ -35,6 +51,7 @@
 .garage-page-container {
   display: flex;
   align-items: center;
+  margin-bottom: 2rem;
 }
 
 .garage-page {
@@ -78,12 +95,7 @@
 
 .create-button,
 .update-button {
-  width: 8.1rem;
-}
-
-.button,
-.car-button {
-  cursor: pointer;
+  width: 8.7rem;
 }
 
 .car-name {
@@ -126,11 +138,13 @@
 
 .race-winner-container {
   font-size: 1.7rem;
+  margin-bottom: 1rem;
 }
 
 .winner-name {
   font-size: 1.7rem;
   margin-left: 1rem;
+  color: #c12525;
 }
 
 .winners__title {
