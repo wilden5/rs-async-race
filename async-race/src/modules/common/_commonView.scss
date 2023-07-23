@@ -4,8 +4,8 @@
   justify-content: center;
   align-items: center;
   gap: 1rem;
-  background-color: grey;
-  color: white;
+  background-color: #808080;
+  color: #ffffff;
 }
 
 .footer-author {
@@ -16,7 +16,7 @@
   color: inherit;
 
   &:hover {
-    color: darkred;
+    color: #8b0000;
     transition: ease-in-out 0.8s;
   }
 }
