@@ -2,6 +2,7 @@ import MainModel from './MainModel';
 import MainView from './MainView';
 import { CarEntity } from '../../types/Interfaces';
 import DOMHelpers from '../../utils/DOMHelpers';
+import ReferenceFunctions from '../../utils/ReferenceFunctions';
 
 class MainController {
     private GARAGE_MODEL: MainModel;
@@ -13,17 +14,17 @@ class MainController {
         this.GARAGE_VIEW = view;
 
         // below functions act as references
-        this.GARAGE_VIEW.onCreateCarButtonClick = this.handleAddNewCar;
-        this.GARAGE_VIEW.onDeleteButtonClick = this.handleDeleteExistingCar;
-        this.GARAGE_VIEW.onUpdateButtonClick = this.handleUpdateExistingCar;
-        this.GARAGE_VIEW.onReceiveExistingCarData = this.handleGetSpecificCarData;
-        this.GARAGE_VIEW.onPrevButtonClick = this.handlePrevGaragePage;
-        this.GARAGE_VIEW.onNextButtonClick = this.handleNextGaragePage;
-        this.GARAGE_VIEW.onGenerateButtonClick = this.handleRandomGeneratedCars;
-        this.GARAGE_VIEW.onStartEngineButtonClick = this.handleSpecificCarAnimation;
-        this.GARAGE_VIEW.onRaceButtonClick = this.handlerCarRace;
-        this.GARAGE_VIEW.onStopEngineButtonClick = this.handleCarEngineStop;
-        this.GARAGE_VIEW.onResetButtonClick = this.handleResetRace;
+        ReferenceFunctions.onCreateCarButtonClick = this.handleAddNewCar;
+        ReferenceFunctions.onDeleteButtonClick = this.handleDeleteExistingCar;
+        ReferenceFunctions.onUpdateButtonClick = this.handleUpdateExistingCar;
+        ReferenceFunctions.onReceiveExistingCarData = this.handleGetSpecificCarData;
+        ReferenceFunctions.onPrevButtonClick = this.handlePrevGaragePage;
+        ReferenceFunctions.onNextButtonClick = this.handleNextGaragePage;
+        ReferenceFunctions.onGenerateButtonClick = this.handleRandomGeneratedCars;
+        ReferenceFunctions.onStartEngineButtonClick = this.handleSpecificCarAnimation;
+        ReferenceFunctions.onRaceButtonClick = this.handlerCarRace;
+        ReferenceFunctions.onStopEngineButtonClick = this.handleCarEngineStop;
+        ReferenceFunctions.onResetButtonClick = this.handleResetRace;
     }
 
     private handleAddNewCar = async (name: string, color: string): Promise<void> => {

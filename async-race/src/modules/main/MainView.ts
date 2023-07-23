@@ -1,33 +1,12 @@
 import DOMHelpers from '../../utils/DOMHelpers';
 import { CarEntity } from '../../types/Interfaces';
 import Constants from '../../utils/Constants';
+import ReferenceFunctions from '../../utils/ReferenceFunctions';
 
 class MainView {
     public MAIN_ELEMENTS: {
         [key: string]: HTMLElement;
     };
-
-    public onCreateCarButtonClick: (name: string, color: string) => void = () => {};
-
-    public onDeleteButtonClick: (id: number) => void = () => {};
-
-    public onUpdateButtonClick: (name: string, color: string, id: number) => void = () => {};
-
-    public onReceiveExistingCarData: (id: number) => Promise<CarEntity> = () => Promise.resolve({} as CarEntity);
-
-    public onPrevButtonClick: () => void = () => {};
-
-    public onNextButtonClick: () => void = () => {};
-
-    public onGenerateButtonClick: () => void = () => {};
-
-    public onStartEngineButtonClick: (id: number) => void = () => {};
-
-    public onRaceButtonClick: () => Promise<void> = async () => {};
-
-    public onStopEngineButtonClick: (id: number, action: string) => Promise<void> = async () => {};
-
-    public onResetButtonClick: () => Promise<void> = async () => {};
 
     constructor() {
         this.MAIN_ELEMENTS = {
@@ -69,7 +48,7 @@ class MainView {
             TABLE_WRAPPER: DOMHelpers.createElement('div', ['table-wrapper']),
             TABLE_ROW_HEADER: DOMHelpers.createElement('div', ['table-row', 'header']),
             TABLE_CELL_NUMBER: DOMHelpers.createElement('div', ['table-number', 'header-cell'], 'Number'),
-            TABLE_CELL_IMAGE: DOMHelpers.createElement('div', ['table-number', 'header-cell'], 'Color'),
+            TABLE_CELL_IMAGE: DOMHelpers.createElement('div', ['table-number', 'header-cell'], 'Car Image'),
             TABLE_CELL_NAME: DOMHelpers.createElement('div', ['table-name', 'header-cell'], 'Name'),
             TABLE_CELL_WINS: DOMHelpers.createElement('div', ['table-wins', 'header-cell'], 'Wins'),
             TABLE_CELL_BEST_TIME: DOMHelpers.createElement('div', ['table-time', 'header-cell'], 'Best Time'),
@@ -184,7 +163,7 @@ class MainView {
         const name = (this.MAIN_ELEMENTS.CREATE_CAR_INPUT as HTMLInputElement).value;
         const color = (this.MAIN_ELEMENTS.SET_CAR_COLOR as HTMLInputElement).value;
         if (name && color) {
-            this.onCreateCarButtonClick(name, color);
+            ReferenceFunctions.onCreateCarButtonClick(name, color);
             (this.MAIN_ELEMENTS.CREATE_CAR_INPUT as HTMLInputElement).value = '';
             (this.MAIN_ELEMENTS.SET_CAR_COLOR as HTMLInputElement).value = Constants.DEFAULT_COLOR_PICKER;
         }
@@ -195,7 +174,7 @@ class MainView {
         const color = (this.MAIN_ELEMENTS.UPDATE_CAR_COLOR as HTMLInputElement).value;
         const id = this.MAIN_ELEMENTS.ID_HOLDER.innerText;
         if (name && color) {
-            this.onUpdateButtonClick(name, color, Number(id));
+            ReferenceFunctions.onUpdateButtonClick(name, color, Number(id));
             this.setInputElementsStatus(Constants.LOCK_INPUT_FIELDS);
             (this.MAIN_ELEMENTS.UPDATE_CAR_INPUT as HTMLInputElement).value = '';
             (this.MAIN_ELEMENTS.UPDATE_CAR_COLOR as HTMLInputElement).value = Constants.DEFAULT_COLOR_PICKER;
@@ -222,7 +201,7 @@ class MainView {
             this.setButtonsStatus(DOMHelpers.getElements('.select-button'), true);
             this.setButtonsStatus(DOMHelpers.getElements('.remove-button'), true);
             (this.MAIN_ELEMENTS.RACE_BUTTON as HTMLButtonElement).disabled = true;
-            this.onRaceButtonClick().then(() => {
+            ReferenceFunctions.onRaceButtonClick().then(() => {
                 (this.MAIN_ELEMENTS.RESET_RACE_BUTTON as HTMLButtonElement).disabled = false;
             });
         }
@@ -230,7 +209,7 @@ class MainView {
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.RESET_RACE_IDENTIFIER)) {
             (this.MAIN_ELEMENTS.RESET_RACE_BUTTON as HTMLButtonElement).disabled = true;
             const carIds: string[] = [];
-            this.onResetButtonClick()
+            ReferenceFunctions.onResetButtonClick()
                 .then(() => {
                     DOMHelpers.getElements('.car-wrapper').forEach((item) => {
                         carIds.push(item.classList[0].split('-')[1]);
@@ -238,7 +217,7 @@ class MainView {
                 })
                 .then(() => {
                     const promises = carIds.map((carId) => {
-                        return this.onStopEngineButtonClick(Number(carId), Constants.ENGINE_STOP)
+                        return ReferenceFunctions.onStopEngineButtonClick(Number(carId), Constants.ENGINE_STOP)
                             .then(() => {
                                 (DOMHelpers.getElement(`.stop-${carId}`) as HTMLButtonElement).disabled = true;
                                 (DOMHelpers.getElement(`.start-${carId}`) as HTMLButtonElement).disabled = false;
@@ -258,7 +237,7 @@ class MainView {
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.GENERATE_CARS_IDENTIFIER)) {
-            this.onGenerateButtonClick();
+            ReferenceFunctions.onGenerateButtonClick();
         }
     };
 
@@ -272,13 +251,13 @@ class MainView {
         const id = (target as HTMLElement).classList[0].split('-')[1];
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.START_ENGINE_IDENTIFIER)) {
-            this.onStartEngineButtonClick(Number(id));
+            ReferenceFunctions.onStartEngineButtonClick(Number(id));
             (DOMHelpers.getElement(`.start-${id}`) as HTMLButtonElement).disabled = true;
             (DOMHelpers.getElement(`.stop-${id}`) as HTMLButtonElement).disabled = false;
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.STOP_ENGINE_IDENTIFIER)) {
-            this.onStopEngineButtonClick(Number(id), Constants.ENGINE_STOP)
+            ReferenceFunctions.onStopEngineButtonClick(Number(id), Constants.ENGINE_STOP)
                 .then(() => {
                     (DOMHelpers.getElement(`.stop-${id}`) as HTMLButtonElement).disabled = true;
                     (DOMHelpers.getElement(`.start-${id}`) as HTMLButtonElement).disabled = false;
@@ -290,11 +269,11 @@ class MainView {
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.REMOVE_BUTTON_IDENTIFIER)) {
-            this.onDeleteButtonClick(Number(id));
+            ReferenceFunctions.onDeleteButtonClick(Number(id));
         }
 
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.SELECT_BUTTON_IDENTIFIER)) {
-            this.onReceiveExistingCarData(Number(id)).then((specificCar) => {
+            ReferenceFunctions.onReceiveExistingCarData(Number(id)).then((specificCar) => {
                 (this.MAIN_ELEMENTS.UPDATE_CAR_INPUT as HTMLInputElement).value = specificCar.name;
                 (this.MAIN_ELEMENTS.UPDATE_CAR_COLOR as HTMLInputElement).value = specificCar.color;
                 this.MAIN_ELEMENTS.ID_HOLDER.innerText = specificCar.id.toString();
@@ -385,8 +364,8 @@ class MainView {
         this.MAIN_ELEMENTS.CREATE_CAR_BUTTON.addEventListener('click', this.handleCreateCarButtonClick);
         this.MAIN_ELEMENTS.CARS_CONTAINER.addEventListener('click', this.handleCarSpecificButtons);
         this.MAIN_ELEMENTS.UPDATE_CAR_BUTTON.addEventListener('click', this.handleUpdateCarButtonClick);
-        this.MAIN_ELEMENTS.PAGINATION_PREV_BUTTON.addEventListener('click', this.onPrevButtonClick);
-        this.MAIN_ELEMENTS.PAGINATION_NEXT_BUTTON.addEventListener('click', this.onNextButtonClick);
+        this.MAIN_ELEMENTS.PAGINATION_PREV_BUTTON.addEventListener('click', ReferenceFunctions.onPrevButtonClick);
+        this.MAIN_ELEMENTS.PAGINATION_NEXT_BUTTON.addEventListener('click', ReferenceFunctions.onNextButtonClick);
         this.MAIN_ELEMENTS.FEATURES_CONTAINER.addEventListener('click', this.handleFeatureButtons);
         this.MAIN_ELEMENTS.GARAGE_BUTTON.addEventListener('click', this.handleToGarageButtonClick);
         this.MAIN_ELEMENTS.WINNERS_BUTTON.addEventListener('click', this.handleToWinnersButtonClick);
