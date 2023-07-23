@@ -1,10 +1,11 @@
 import Constants from '../../utils/Constants';
-import { CarEntity, EngineStatus, RaceResult } from '../../types/Interfaces';
+import { CarEntity, EngineStatus, RaceResult, WinnerData } from '../../types/Interfaces';
 import DOMHelpers from '../../utils/DOMHelpers';
-import WinnersModel from '../winners/WinnersModel';
 
 class GarageModel {
     private NUMBER_CARS_IN_GARAGE: number;
+
+    private numberOfWinners: number;
 
     private CURRENT_GARAGE_PAGE: number;
 
@@ -14,14 +15,12 @@ class GarageModel {
 
     private ENGINES_STATUSES: EngineStatus = {};
 
-    private WINNERS_MODEL: WinnersModel;
-
     constructor() {
         this.NUMBER_CARS_IN_GARAGE = 0;
+        this.numberOfWinners = 0;
         this.CURRENT_GARAGE_PAGE = 1;
         this.CARS_PER_GARAGE_PAGE = 7;
         this.TOTAL_CARS_IN_GARAGE = [];
-        this.WINNERS_MODEL = new WinnersModel();
     }
 
     public async fetchNumberOfCarsFromDB(): Promise<void> {
@@ -52,6 +51,16 @@ class GarageModel {
 
     public setTotalCarsInGarage(cars: CarEntity[]): void {
         this.TOTAL_CARS_IN_GARAGE = cars;
+    }
+
+    public getNumberOfWinners(): number {
+        return this.numberOfWinners;
+    }
+
+    public async setNumberOfWinners(): Promise<void> {
+        const response = await fetch(Constants.WINNERS_URL);
+        const data: number[] = await response.json();
+        this.numberOfWinners = data.length;
     }
 
     public async saveNewCarInDB(name: string, color: string): Promise<void> {
@@ -167,7 +176,6 @@ class GarageModel {
                 this.ENGINES_STATUSES[id] = true;
                 console.log(this.ENGINES_STATUSES);
             }
-
             return time;
         }
         console.log('Error during time calculating');
@@ -239,7 +247,7 @@ class GarageModel {
         return carIds;
     }
 
-    public async startRaceOnSpecificPage(): Promise<void> {
+    public async startRaceOnSpecificPage(onRaceFinish: (carId: number, time: number) => void): Promise<void> {
         const carIds = this.getAllCarsFromSpecificPage();
         const animationPromises = carIds.map((id) => this.animateSpecificCar(Number(id)));
         const raceData: RaceResult[] = await Promise.all(animationPromises);
@@ -249,7 +257,7 @@ class GarageModel {
             raceFinishers.sort((a, b) => a.time - b.time);
             const winner = raceFinishers[0];
             DOMHelpers.getElement('.winner-name').innerText = DOMHelpers.getElement(`.name-${winner.carId}`).innerText;
-            await this.WINNERS_MODEL.handleWinner(winner.carId, winner.time);
+            onRaceFinish(winner.carId, winner.time);
         } else {
             console.log(Constants.NO_ONE_FINISHED_RACE);
         }
@@ -262,8 +270,91 @@ class GarageModel {
         });
     }
 
+    public async createWinner(id: number, wins: number, time: number): Promise<void> {
+        const data = {
+            id,
+            wins,
+            time,
+        };
+        console.log(data);
+        const response = await fetch(Constants.WINNERS_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (response.ok) {
+            console.log('Winner was added');
+        } else {
+            console.log('Error when trying to add winner');
+        }
+    }
+
+    public async updateWinner(id: number, wins: number, time: number): Promise<void> {
+        const data = {
+            wins,
+            time,
+        };
+        const response = await fetch(`${Constants.WINNERS_URL}/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        if (response.ok) {
+            console.log('car was updated');
+        } else {
+            console.log('error when trying to update car');
+        }
+    }
+
+    public async getWinners(): Promise<WinnerData[]> {
+        const response = await fetch(Constants.WINNERS_URL);
+        return response.json();
+    }
+
+    public async getSpecificWinner(id: number): Promise<WinnerData | null> {
+        try {
+            const response = await fetch(`${Constants.WINNERS_URL}/${id}`);
+
+            if (response.ok) {
+                console.log('winner found');
+                return await response.json();
+            }
+            console.log('Winner not found');
+            return null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    public async deleteSpecificWinner(id: number): Promise<void> {
+        const response = await fetch(`${Constants.WINNERS_URL}/${id}`, {
+            method: 'DELETE',
+        });
+        if (response.ok) {
+            console.log('Winner was deleted');
+        } else {
+            console.log('error when trying to delete winner');
+        }
+    }
+
+    public async deleteInitialWinnerRecordInDB(id: number): Promise<void> {
+        if (!localStorage.getItem('initial-winner')) {
+            const car = await this.getSpecificWinner(id);
+            if (car?.time === 10) {
+                await this.deleteSpecificWinner(id);
+                localStorage.setItem('initial-winner', 'deleted');
+            }
+        }
+    }
+
     public async init(): Promise<void> {
         await this.fetchNumberOfCarsFromDB();
+        await this.setNumberOfWinners();
     }
 }
 

@@ -1,6 +1,7 @@
 import GarageModel from './GarageModel';
 import GarageView from './GarageView';
 import { CarEntity } from '../../types/Interfaces';
+import DOMHelpers from '../../utils/DOMHelpers';
 
 class GarageController {
     private GARAGE_MODEL: GarageModel;
@@ -41,9 +42,13 @@ class GarageController {
 
     private handleDeleteExistingCar = async (id: number): Promise<void> => {
         await this.GARAGE_MODEL.deleteCarInDB(id);
+        await this.GARAGE_MODEL.deleteSpecificWinner(id);
         await this.GARAGE_MODEL.fetchNumberOfCarsFromDB();
+        await this.GARAGE_MODEL.setNumberOfWinners();
+        await this.GARAGE_VIEW.updateWinnersTitle(this.GARAGE_MODEL.getNumberOfWinners());
         await this.handleRenderCarsInGarage();
         this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberCarsInGarage());
+        await this.populateWinnersTable();
     };
 
     private handleUpdateExistingCar = async (name: string, color: string, id: number): Promise<void> => {
@@ -111,18 +116,58 @@ class GarageController {
     };
 
     private handlerCarRace = async (): Promise<void> => {
-        await this.GARAGE_MODEL.startRaceOnSpecificPage();
+        await this.GARAGE_MODEL.startRaceOnSpecificPage(this.handleWinner);
     };
 
     private handleResetRace = async (): Promise<void> => {
         await this.GARAGE_MODEL.returnRaceCarsToStartPosition();
+        await this.populateWinnersTable();
     };
+
+    private handleWinner = async (id: number, lastTime: number): Promise<void> => {
+        const winner = await this.GARAGE_MODEL.getSpecificWinner(id);
+        if (winner) {
+            if (lastTime < winner.time) {
+                console.log(`last time ${lastTime} prev-db-time ${winner.time}`);
+                await this.GARAGE_MODEL.updateWinner(id, winner.wins + 1, lastTime);
+            } else {
+                await this.GARAGE_MODEL.updateWinner(id, winner.wins + 1, winner.time);
+            }
+        } else {
+            await this.GARAGE_MODEL.createWinner(id, 1, lastTime);
+        }
+        await this.populateWinnersTable();
+        await this.GARAGE_MODEL.setNumberOfWinners();
+        this.GARAGE_VIEW.updateWinnersTitle(this.GARAGE_MODEL.getNumberOfWinners());
+    };
+
+    public async populateWinnersTable(): Promise<void> {
+        DOMHelpers.getElement('.table-row-wrapper').innerHTML = '';
+        let rowNumber = 1;
+        const allWinners = await this.GARAGE_MODEL.getWinners();
+        const allCars = await Promise.all(
+            allWinners.map((item) => this.GARAGE_MODEL.fetchSpecificCarDataFromDB(item.id))
+        );
+
+        allCars.forEach((car, index) => {
+            this.GARAGE_VIEW.createWinnersTableMarkup(
+                rowNumber,
+                car.name,
+                allWinners[index].wins,
+                allWinners[index].time
+            );
+            rowNumber += 1;
+        });
+    }
 
     public async init(): Promise<void> {
         this.GARAGE_VIEW.setupDOMElementsAndEventHandlers();
         await this.GARAGE_MODEL.init();
         this.GARAGE_VIEW.updateNumberOfCarsInGarageTitle(this.GARAGE_MODEL.getNumberCarsInGarage());
+        this.GARAGE_VIEW.updateWinnersTitle(this.GARAGE_MODEL.getNumberOfWinners());
         await this.handleRenderCarsInGarage();
+        await this.GARAGE_MODEL.deleteInitialWinnerRecordInDB(1);
+        await this.populateWinnersTable();
     }
 }
 

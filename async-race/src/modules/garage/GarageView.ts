@@ -52,6 +52,26 @@ class GarageView {
 
     public WINNER_NAME: HTMLElement;
 
+    public WINNERS_TITLE: HTMLElement;
+
+    public WINNERS_PAGE: HTMLElement;
+
+    public TABLE_WRAPPER: HTMLElement;
+
+    public TABLE_ROW_HEADER: HTMLElement;
+
+    public TABLE_CELL_NUMBER: HTMLElement;
+
+    public TABLE_CELL_IMAGE: HTMLElement;
+
+    public TABLE_CELL_NAME: HTMLElement;
+
+    public TABLE_CELL_WINS: HTMLElement;
+
+    public TABLE_CELL_BEST_TIME: HTMLElement;
+
+    public TABLE_ROW_WRAPPER: HTMLElement;
+
     public onCreateCarButtonClick: (name: string, color: string) => void = () => {};
 
     public onDeleteButtonClick: (id: number) => void = () => {};
@@ -103,6 +123,16 @@ class GarageView {
             'WINNER IN THE LAST RACE:'
         );
         this.WINNER_NAME = DOMHelpers.createElement('span', ['winner-name']);
+        this.WINNERS_TITLE = DOMHelpers.createElement('div', ['winners__title'], 'Winners');
+        this.WINNERS_PAGE = DOMHelpers.createElement('div', ['winners__page'], 'Page #1');
+        this.TABLE_WRAPPER = DOMHelpers.createElement('div', ['table-wrapper']);
+        this.TABLE_ROW_HEADER = DOMHelpers.createElement('div', ['table-row', 'header']);
+        this.TABLE_CELL_NUMBER = DOMHelpers.createElement('div', ['table-number', 'header-cell'], 'Number');
+        this.TABLE_CELL_IMAGE = DOMHelpers.createElement('div', ['table-number', 'header-cell'], 'Color');
+        this.TABLE_CELL_NAME = DOMHelpers.createElement('div', ['table-name', 'header-cell'], 'Name');
+        this.TABLE_CELL_WINS = DOMHelpers.createElement('div', ['table-wins', 'header-cell'], 'Wins');
+        this.TABLE_CELL_BEST_TIME = DOMHelpers.createElement('div', ['table-time', 'header-cell'], 'Best Time');
+        this.TABLE_ROW_WRAPPER = DOMHelpers.createElement('div', ['table-row-wrapper']);
     }
 
     private appendElements(): void {
@@ -116,6 +146,16 @@ class GarageView {
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.CARS_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.GARAGE_CONTAINER, this.PAGINATION_CONTAINER);
         DOMHelpers.appendChildToElement(this.COMMON_VIEW.NAVIGATION_CONTAINER, this.GARAGE_BUTTONS_WRAPPER);
+        DOMHelpers.appendChildToElement(this.COMMON_VIEW.WINNERS_CONTAINER, this.WINNERS_TITLE);
+        DOMHelpers.appendChildToElement(this.COMMON_VIEW.WINNERS_CONTAINER, this.WINNERS_PAGE);
+        DOMHelpers.appendChildToElement(this.COMMON_VIEW.WINNERS_CONTAINER, this.TABLE_WRAPPER);
+        DOMHelpers.appendChildToElement(this.TABLE_WRAPPER, this.TABLE_ROW_HEADER);
+        DOMHelpers.appendChildToElement(this.TABLE_WRAPPER, this.TABLE_ROW_WRAPPER);
+        DOMHelpers.appendChildToElement(this.TABLE_ROW_HEADER, this.TABLE_CELL_NUMBER);
+        DOMHelpers.appendChildToElement(this.TABLE_ROW_HEADER, this.TABLE_CELL_IMAGE);
+        DOMHelpers.appendChildToElement(this.TABLE_ROW_HEADER, this.TABLE_CELL_NAME);
+        DOMHelpers.appendChildToElement(this.TABLE_ROW_HEADER, this.TABLE_CELL_WINS);
+        DOMHelpers.appendChildToElement(this.TABLE_ROW_HEADER, this.TABLE_CELL_BEST_TIME);
         DOMHelpers.appendChildToElement(this.GARAGE_BUTTONS_WRAPPER, this.CREATE_CONTAINER);
         DOMHelpers.appendChildToElement(this.GARAGE_BUTTONS_WRAPPER, this.UPDATE_CONTAINER);
         DOMHelpers.appendChildToElement(this.GARAGE_BUTTONS_WRAPPER, this.FEATURES_CONTAINER);
@@ -172,6 +212,10 @@ class GarageView {
         this.GARAGE_PAGE.innerText = `Page #${pageNumber}`;
     }
 
+    public updateWinnersTitle(numberOfWinners: number): void {
+        this.WINNERS_TITLE.innerText = `Winners (${numberOfWinners})`;
+    }
+
     private handleCreateCarButtonClick = (): void => {
         const name = (this.CREATE_CAR_INPUT as HTMLInputElement).value;
         const color = (this.SET_CAR_COLOR as HTMLInputElement).value;
@@ -211,6 +255,8 @@ class GarageView {
         if ((target as HTMLElement).innerText.toLowerCase().includes(Constants.START_RACE_IDENTIFIER)) {
             this.setButtonsStatus(DOMHelpers.getElements('.start-button'), true);
             this.setButtonsStatus(DOMHelpers.getElements('.stop-button'), false);
+            this.setButtonsStatus(DOMHelpers.getElements('.select-button'), true);
+            this.setButtonsStatus(DOMHelpers.getElements('.remove-button'), true);
             (this.RACE_BUTTON as HTMLButtonElement).disabled = true;
             this.onRaceButtonClick().then(() => {
                 (this.RESET_RACE_BUTTON as HTMLButtonElement).disabled = false;
@@ -242,6 +288,8 @@ class GarageView {
                 })
                 .then(() => {
                     (this.RACE_BUTTON as HTMLButtonElement).disabled = false;
+                    this.setButtonsStatus(DOMHelpers.getElements('.select-button'), false);
+                    this.setButtonsStatus(DOMHelpers.getElements('.remove-button'), false);
                 });
         }
 
@@ -302,12 +350,12 @@ class GarageView {
             const carFinishFlag = DOMHelpers.createElement('div', [`finish-${car.id}`, 'car-finish-flag']);
             const selectCarButton = DOMHelpers.createElement(
                 'button',
-                [`select-${car.id}`, 'car-button'],
+                [`select-${car.id}`, 'select-button', 'car-button'],
                 'Select Car'
             );
             const removeCarButton = DOMHelpers.createElement(
                 'button',
-                [`remove-${car.id}`, 'car-button'],
+                [`remove-${car.id}`, 'remove-button', 'car-button'],
                 'Remove Car'
             );
             const startCarEngineButton = DOMHelpers.createElement(
@@ -336,6 +384,22 @@ class GarageView {
             DOMHelpers.appendChildToElement(carButtonsContainer, removeCarButton);
             DOMHelpers.appendChildToElement(this.CARS_CONTAINER, carDiv);
         });
+    }
+
+    public createWinnersTableMarkup(carN: number, name: string, wins: number, time: number): void {
+        const row = DOMHelpers.createElement('div', ['car-row']);
+        const carNumber = DOMHelpers.createElement('div', ['car-number', 'car-cell'], carN.toString());
+        const carImage = DOMHelpers.createElement('div', ['car-image', 'car-cell'], 'none');
+        const carName = DOMHelpers.createElement('div', ['car-name', 'car-cell'], name);
+        const carWins = DOMHelpers.createElement('div', ['car-wins', 'car-cell'], wins.toString());
+        const carTime = DOMHelpers.createElement('div', ['car-time', 'car-cell'], (time / 1000).toFixed(2).toString());
+
+        DOMHelpers.appendChildToElement(row, carNumber);
+        DOMHelpers.appendChildToElement(row, carImage);
+        DOMHelpers.appendChildToElement(row, carName);
+        DOMHelpers.appendChildToElement(row, carWins);
+        DOMHelpers.appendChildToElement(row, carTime);
+        DOMHelpers.appendChildToElement(DOMHelpers.getElement('.table-row-wrapper'), row);
     }
 
     public setupDOMElementsAndEventHandlers(): void {
