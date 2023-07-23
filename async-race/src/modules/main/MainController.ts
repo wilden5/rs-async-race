@@ -157,6 +157,7 @@ class MainController {
             this.GARAGE_VIEW.createWinnersTableMarkup(
                 rowNumber,
                 car.name,
+                car.color,
                 allWinners[index].wins,
                 allWinners[index].time
             );

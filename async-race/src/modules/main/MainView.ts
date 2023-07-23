@@ -337,10 +337,15 @@ class MainView {
         });
     }
 
-    public createWinnersTableMarkup(carN: number, name: string, wins: number, time: number): void {
+    public createWinnersTableMarkup(carN: number, name: string, color: string, wins: number, time: number): void {
+        const carSvg = DOMHelpers.createElement('div', ['car-preview']);
+        carSvg.innerHTML = Constants.CAR_SVG;
+        const svgPath = carSvg.querySelector('path') as Element;
+        svgPath.setAttribute('fill', color);
         const row = DOMHelpers.createElement('div', ['car-row']);
         const carNumber = DOMHelpers.createElement('div', ['car-number', 'car-cell'], carN.toString());
-        const carImage = DOMHelpers.createElement('div', ['car-image', 'car-cell'], 'none');
+        const carImage = DOMHelpers.createElement('div', ['car-image', 'car-cell']);
+        DOMHelpers.appendChildToElement(carImage, carSvg);
         const carName = DOMHelpers.createElement('div', ['car-name', 'car-cell'], name);
         const carWins = DOMHelpers.createElement('div', ['car-wins', 'car-cell'], wins.toString());
         const carTime = DOMHelpers.createElement(
