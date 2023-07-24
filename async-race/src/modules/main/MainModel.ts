@@ -125,7 +125,6 @@ class MainModel {
         const response = await fetch(`${Constants.GARAGE_URL}/${id}`);
 
         if (response.ok) {
-            console.log(Constants.FETCH_SPECIFIC_CAR_SUCCESS_MESSAGE);
             return response.json();
         }
 
@@ -167,18 +166,14 @@ class MainModel {
         delete this.ENGINES_STATUSES[id];
 
         if (response.ok) {
-            console.log(this.ENGINES_STATUSES);
             const data = await response.json();
             const time: number = data.distance / data.velocity;
-            console.log(`Time is ${time}ms`);
 
             if (action === Constants.ENGINE_STOP) {
                 this.ENGINES_STATUSES[id] = true;
-                console.log(this.ENGINES_STATUSES);
             }
             return time;
         }
-        console.log('Error during time calculating');
         return 0;
     }
 
@@ -276,7 +271,6 @@ class MainModel {
             wins,
             time,
         };
-        console.log(data);
         const response = await fetch(Constants.WINNERS_URL, {
             method: 'POST',
             headers: {
@@ -286,9 +280,9 @@ class MainModel {
         });
 
         if (response.ok) {
-            console.log('Winner was added');
+            console.log(Constants.CREATE_WINNER_SUCCESSFUL_MESSAGE);
         } else {
-            console.log('Error when trying to add winner');
+            console.log(Constants.CREATE_WINNER_FAILED_MESSAGE);
         }
     }
 
@@ -305,30 +299,30 @@ class MainModel {
             body: JSON.stringify(data),
         });
         if (response.ok) {
-            console.log('car was updated');
+            console.log(Constants.UPDATE_WINNER_SUCCESSFUL_MESSAGE);
         } else {
-            console.log('error when trying to update car');
+            console.log(Constants.UPDATE_WINNER_FAILED_MESSAGE);
         }
     }
 
     public async getWinners(sortType?: string): Promise<WinnerData[]> {
         if (sortType === 'wins-desc') {
-            const response = await fetch(`${Constants.WINNERS_URL}?_sort=wins&_order=desc`);
+            const response = await fetch(`${Constants.WINNERS_URL}${Constants.SORT_BY_WINS_DESC}`);
             return response.json();
         }
 
         if (sortType === 'time-asc') {
-            const response = await fetch(`${Constants.WINNERS_URL}?_sort=time&_order=asc`);
+            const response = await fetch(`${Constants.WINNERS_URL}${Constants.SORT_BY_BEST_TIME_ASC}`);
             return response.json();
         }
 
         if (sortType === 'wins-asc') {
-            const response = await fetch(`${Constants.WINNERS_URL}?_sort=wins&_order=asc`);
+            const response = await fetch(`${Constants.WINNERS_URL}${Constants.SORT_BY_WINS_ASC}`);
             return response.json();
         }
 
         if (sortType === 'time-desc') {
-            const response = await fetch(`${Constants.WINNERS_URL}?_sort=time&_order=desc`);
+            const response = await fetch(`${Constants.WINNERS_URL}${Constants.SORT_BY_BEST_TIME_DESC}`);
             return response.json();
         }
 
@@ -341,10 +335,10 @@ class MainModel {
             const response = await fetch(`${Constants.WINNERS_URL}/${id}`);
 
             if (response.ok) {
-                console.log('winner found');
+                console.log(Constants.GET_WINNER_SUCCESS_MESSAGE);
                 return await response.json();
             }
-            console.log('Winner not found');
+            console.log(Constants.GET_WINNER_FAIL_MESSAGE);
             return null;
         } catch (error) {
             return null;
@@ -356,9 +350,9 @@ class MainModel {
             method: 'DELETE',
         });
         if (response.ok) {
-            console.log('Winner was deleted');
+            console.log(Constants.DELETE_WINNER_SUCCESS_MESSAGE);
         } else {
-            console.log('error when trying to delete winner');
+            console.log(Constants.DELETE_WINNER_FAIL_MESSAGE);
         }
     }
 

@@ -132,7 +132,6 @@ class MainController {
         const winner: WinnerData | null = await this.GARAGE_MODEL.getSpecificWinner(id);
         if (winner) {
             if (lastTime < winner.time) {
-                console.log(`last time ${lastTime} prev-db-time ${winner.time}`);
                 await this.GARAGE_MODEL.updateWinner(id, winner.wins + 1, lastTime);
             } else {
                 await this.GARAGE_MODEL.updateWinner(id, winner.wins + 1, winner.time);
