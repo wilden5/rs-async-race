@@ -53,6 +53,8 @@ class MainView {
             TABLE_CELL_WINS: DOMHelpers.createElement('div', ['table-wins', 'header-cell'], 'Wins'),
             TABLE_CELL_BEST_TIME: DOMHelpers.createElement('div', ['table-time', 'header-cell'], 'Best Time'),
             TABLE_ROW_WRAPPER: DOMHelpers.createElement('div', ['table-row-wrapper']),
+            WINNERS_NEXT_BUTTON: DOMHelpers.createElement('button', ['win-next-button', 'button'], 'Next'),
+            WINNERS_PREV_BUTTON: DOMHelpers.createElement('button', ['win-prev-button', 'button'], 'Previous'),
         };
     }
 
@@ -84,6 +86,8 @@ class MainView {
         );
         DOMHelpers.appendChildToElement(this.MAIN_ELEMENTS.WINNERS_CONTAINER, this.MAIN_ELEMENTS.WINNERS_TITLE);
         DOMHelpers.appendChildToElement(this.MAIN_ELEMENTS.WINNERS_CONTAINER, this.MAIN_ELEMENTS.WINNERS_PAGE);
+        DOMHelpers.appendChildToElement(this.MAIN_ELEMENTS.WINNERS_CONTAINER, this.MAIN_ELEMENTS.WINNERS_PREV_BUTTON);
+        DOMHelpers.appendChildToElement(this.MAIN_ELEMENTS.WINNERS_CONTAINER, this.MAIN_ELEMENTS.WINNERS_NEXT_BUTTON);
         DOMHelpers.appendChildToElement(this.MAIN_ELEMENTS.WINNERS_CONTAINER, this.MAIN_ELEMENTS.TABLE_WRAPPER);
         DOMHelpers.appendChildToElement(this.MAIN_ELEMENTS.TABLE_WRAPPER, this.MAIN_ELEMENTS.TABLE_ROW_HEADER);
         DOMHelpers.appendChildToElement(this.MAIN_ELEMENTS.TABLE_WRAPPER, this.MAIN_ELEMENTS.TABLE_ROW_WRAPPER);
@@ -145,6 +149,8 @@ class MainView {
 
     private setFeaturesButtonsInitialState(): void {
         (this.MAIN_ELEMENTS.RESET_RACE_BUTTON as HTMLInputElement).disabled = true;
+        (this.MAIN_ELEMENTS.WINNERS_PREV_BUTTON as HTMLInputElement).disabled = true;
+        (this.MAIN_ELEMENTS.WINNERS_NEXT_BUTTON as HTMLInputElement).disabled = true;
     }
 
     public updateNumberOfCarsInGarageTitle(numberOfCars: number): void {
