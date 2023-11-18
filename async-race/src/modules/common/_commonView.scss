@@ -1,0 +1,26 @@
+.footer-container {
+  padding: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  background-color: #808080;
+  color: #ffffff;
+}
+
+.footer-author {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    color: #8b0000;
+    transition: ease-in-out 0.8s;
+  }
+}
+
+.footer-school-img {
+  height: 2.5rem;
+}

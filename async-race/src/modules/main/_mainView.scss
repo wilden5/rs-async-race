@@ -1,0 +1,241 @@
+.button,
+.car-button {
+  transition: ease-in-out 0.3s;
+  cursor: pointer;
+  font-weight: bold;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    transform: scale(1);
+  }
+}
+
+.navigation-panel-container {
+  margin-bottom: 3rem;
+}
+
+.garage-container {
+
+  &.disabled {
+    display: none;
+  }
+}
+
+.winners-container {
+
+  &.disabled {
+    display: none;
+  }
+}
+
+.garage-buttons-wrapper {
+
+  &.disabled {
+    display: none;
+  }
+}
+
+.garage-button {
+  margin-right: 1rem;
+}
+
+.garage-title {
+  margin-bottom: 2rem;
+  font-size: 4rem;
+}
+
+.garage-page-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.garage-page {
+  font-size: 2rem;
+  min-width: 7.5rem;
+  margin-right: 1rem;
+}
+
+.pag-prev-button {
+  margin-right: 1rem;
+}
+
+.create-container {
+  margin-top: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.car-wrapper {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.car-name {
+  font-size: 2rem;
+}
+
+.id-holder {
+  display: none;
+}
+
+.update-container {
+  margin-bottom: 1rem;
+}
+
+.create-color,
+.update-color {
+  height: 2.1rem;
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
+
+.create-button,
+.update-button {
+  width: 8.7rem;
+}
+
+.car-name {
+  margin-bottom: 0.5rem;
+}
+
+.car-buttons-container {
+  margin-bottom: 1rem;
+}
+
+.car-button{
+  margin-right: 1rem;
+}
+
+.car-route {
+  position: relative;
+  border: 0.2rem dashed #808080;
+}
+
+.car-finish-flag {
+  position: absolute;
+  left: 74%;
+  bottom: 100%;
+  width: 2.5rem;
+  height: 3.4rem;
+  background-image: url('../../assets/traffic-light-icon.png');
+  background-repeat: no-repeat;
+  background-size: 2.5rem 3.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.car {
+  width: 10rem;
+}
+
+.features-container {
+  display: flex;
+  gap: 1rem;
+}
+
+.race-winner-container {
+  font-size: 1.7rem;
+  margin-bottom: 1rem;
+}
+
+.winner-name {
+  font-size: 1.7rem;
+  margin-left: 1rem;
+  color: #c12525;
+}
+
+.winners__title {
+  margin-bottom: 2rem;
+  font-size: 4rem;
+}
+
+.winners__page {
+  font-size: 2rem;
+}
+
+.table-wrapper {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+
+.table-row {
+  display: flex;
+  border-bottom: 0.2rem solid #ccc;
+}
+
+.header {
+  font-weight: bold;
+  background-color: #f0f0f0;
+}
+
+.header-cell {
+  flex: 1;
+  padding: 1rem;
+  font-size: 2rem;
+
+  &:nth-child(4),
+  &:nth-child(5) {
+    cursor: pointer;
+
+    &:hover {
+      transition: ease-in-out 0.5s;
+      color: #c12525;
+    }
+  }
+}
+
+.car-row {
+  display: flex;
+  border-bottom: 0.2rem solid #ccc;
+}
+
+.car-cell {
+  flex: 1;
+  padding: 1rem;
+  font-size: 2rem;
+}
+
+.table-wins,
+.table-time {
+  position: relative;
+  padding-right: 1.5rem;
+
+  &.triggered {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: 10%;
+      width: 0;
+      height: 0;
+      border-left: 0.5rem solid transparent;
+      border-right: 0.5rem solid transparent;
+      border-top: 0.5rem solid red;
+      transform: translateY(-50%);
+    }
+
+    &.asc::after {
+      border-top: none;
+      border-left: 0.5rem solid transparent;
+      border-right: 0.5rem solid transparent;
+      border-bottom: 0.5rem solid red;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .car-cell,
+  .header-cell{
+    font-size: 1rem;
+  }
+}
+
+.win-next-button {
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
